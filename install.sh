@@ -142,12 +142,19 @@ fi
 # ------------------------------------------------------------------
 
 # Without these the app does not come up at all: the backend is a ucode
-# plugin loaded by rpcd.
-DEPS_REQUIRED="ucode rpcd-mod-ucode"
+# plugin loaded by rpcd, and it imports three ucode modules, which are
+# separate packages. luci-base already depends on ucode-mod-fs and
+# ucode-mod-uci, so those are normally present - ucode-mod-math is not in
+# anything LuCI pulls in, and the backend needs it for the temporary name
+# the editor's atomic save writes through.
+DEPS_REQUIRED="ucode ucode-mod-fs ucode-mod-uci ucode-mod-math rpcd-mod-ucode"
 # Only upload and download go through the Lua controller; browsing, editing,
 # deleting, copying, moving, permissions and search are all ubus. So these
 # are worth installing but not worth refusing to install over.
-DEPS_OPTIONAL="luci-lua-runtime luci-lib-nixio"
+# luci-lua-runtime declares the other two itself; they are listed so that a
+# half-installed system is reported rather than silently returning 403 from
+# the controller's ACL check, which fails closed when libubus-lua is absent.
+DEPS_OPTIONAL="luci-lua-runtime luci-lib-nixio libubus-lua"
 
 # 25.12 and newer use apk, earlier releases opkg.
 if command -v apk >/dev/null 2>&1; then
@@ -254,14 +261,25 @@ if [ ! -d /usr/share/rpcd/ucode ]; then
 	echo "WARNING: /usr/share/rpcd/ucode is missing - install 'rpcd-mod-ucode' or the backend will not load." >&2
 fi
 
-echo "Validating ucode backend syntax..."
-if ! ucode "${RUNTIME_DIR}/usr/share/rpcd/ucode/wrtcommander.uc" >/tmp/wrtcommander-ucode-check.log 2>&1; then
-	echo "ERROR: wrtcommander.uc failed to parse - aborting before touching the live install:" >&2
-	cat /tmp/wrtcommander-ucode-check.log >&2
-	rm -f /tmp/wrtcommander-ucode-check.log
+# This runs the backend, so it is also the real check that the ucode
+# modules it imports are installed and loadable - which the package
+# database cannot tell us when there is no package manager, or when the
+# install was run with --no-deps.
+echo "Validating the ucode backend..."
+CHECK=/tmp/wrtcommander-ucode-check.log
+if ! ucode "${RUNTIME_DIR}/usr/share/rpcd/ucode/wrtcommander.uc" >"$CHECK" 2>&1; then
+	if grep -q 'Unable to resolve path for module' "$CHECK"; then
+		echo "ERROR: the backend cannot load a ucode module it needs:" >&2
+		sed 's/^/       /' "$CHECK" >&2
+		echo "       Install the missing ones: ucode-mod-fs, ucode-mod-uci, ucode-mod-math." >&2
+	else
+		echo "ERROR: wrtcommander.uc failed to parse - aborting before touching the live install:" >&2
+		sed 's/^/       /' "$CHECK" >&2
+	fi
+	rm -f "$CHECK"
 	exit 1
 fi
-rm -f /tmp/wrtcommander-ucode-check.log
+rm -f "$CHECK"
 echo "  OK"
 
 # ------------------------------------------------------------------

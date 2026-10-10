@@ -59,15 +59,17 @@
 - LuCI (представления на JS, то есть любой современный LuCI)
 - `rpcd` с `rpcd-mod-ucode` (даёт загрузчик плагинов
   `/usr/share/rpcd/ucode`)
-- `ucode` (сам интерпретатор)
+- `ucode` и его модули `ucode-mod-fs`, `ucode-mod-uci`, `ucode-mod-math`
 - `uhttpd`
 - `luci-lua-runtime` — нужен **только** для загрузки/скачивания
   (см. ниже); всё остальное (просмотр, правка, удаление, копирование,
   перемещение, права, поиск) работает без него
 
-Всё перечисленное — штатные части любого роутера, где уже работает
-стоковый LuCI, так что на обычной прошивке доставлять нечего, кроме
-`ucode`/`rpcd-mod-ucode`, если образ необычно урезанный.
+Почти всё перечисленное уже стоит на любом роутере со стоковым LuCI —
+`luci-base` сам тянет `rpcd-mod-ucode`, `ucode`, `ucode-mod-fs` и
+`ucode-mod-uci`. Исключение — `ucode-mod-math`: его не тянет ничто из
+LuCI. Установщик ставит недостающее сам, см. «Какие зависимости
+ставятся».
 
 ## Архитектура
 
@@ -194,7 +196,7 @@ wget -q -O - https://raw.githubusercontent.com/p0sixxx/luci-app-wrtcommander/mai
 |---|---|
 | 🔒 | отказывается работать не от root и не на OpenWrt |
 | 📥 | прочитанный из конвейера — скачивает ветку архивом в `/tmp` и запускает установщик уже из неё (из распакованной копии ставит сразу) |
-| 📦 | доставляет `ucode` и `rpcd-mod-ucode` через `apk` (25.12+) или `opkg` (до 24.10); `luci-lua-runtime` и `luci-lib-nixio` тоже, но их отсутствие — предупреждение, а не отказ: без них не работают только загрузка и скачивание |
+| 📦 | доставляет недостающие зависимости через `apk` (25.12+) или `opkg` (до 24.10) — список ниже |
 | 🔍 | проверяет, что на месте `ubus`, `rpcd`, `ucode` и LuCI |
 | 🧪 | разбирает ucode-бэкенд и прерывается **до того, как тронет рабочую установку**, если разбор не удался |
 | 📄 | копирует каждый файл из `deploy/MANIFEST` по его абсолютному пути, не трогая существующий `/etc/config/wrtcommander` (если не передать `--force-config`) |
@@ -204,6 +206,43 @@ wget -q -O - https://raw.githubusercontent.com/p0sixxx/luci-app-wrtcommander/mai
 
 `uhttpd` намеренно не перезапускается: статика и Lua-контроллер
 подхватываются на следующем запросе.
+
+#### Какие зависимости ставятся
+
+Ставится только то, чего нет, — уже установленное не трогается, а индекс
+пакетов обновляется, только если что-то действительно надо поставить.
+
+| пакет | зачем | если не поставился |
+|---|---|---|
+| `ucode` | интерпретатор бэкенда | **отказ** |
+| `rpcd-mod-ucode` | загрузчик ucode-плагинов в `rpcd` | **отказ** |
+| `ucode-mod-fs` | файловые операции бэкенда | **отказ** |
+| `ucode-mod-uci` | чтение `/etc/config/wrtcommander` | **отказ** |
+| `ucode-mod-math` | имя временного файла при атомарном сохранении в редакторе | **отказ** |
+| `luci-lua-runtime` | Lua-контроллер загрузки и скачивания | предупреждение |
+| `luci-lib-nixio` | файловые операции контроллера | предупреждение |
+| `libubus-lua` | проверка прав в контроллере | предупреждение |
+
+Обязательные пять — то, без чего бэкенд не загрузится вообще. Первые
+четыре из них на любом роутере с LuCI уже стоят: их тянет `luci-base`.
+А вот `ucode-mod-math` не тянет ничто из LuCI, и без него бэкенд не
+поднимется — его установщик и докладывает чаще всего.
+
+Нижние три нужны только загрузке и скачиванию; без них всё остальное —
+просмотр, правка, удаление, копирование, перемещение, права, поиск —
+работает. Поэтому их отсутствие — предупреждение, а не отказ. `libubus-lua`
+стоит в списке отдельно, хотя его и тянет `luci-lua-runtime`: без него
+проверка прав в контроллере закрывается наглухо, и загрузка молча
+отвечала бы 403 — лучше сказать об этом при установке.
+
+Что **не** ставится, а только проверяется: сам LuCI, `rpcd`, `ubus` и
+`uhttpd`. Если их нет, это не тот роутер, на который ставят LuCI-приложение,
+и установщик скажет об этом прямо.
+
+Есть и вторая проверка, не зависящая от менеджера пакетов: установщик
+запускает бэкенд, и если тот не может подгрузить ucode-модуль, ошибка
+называет пакет, а не выдаёт себя за ошибку разбора. Это ловит и случай
+`--no-deps`, и образ вовсе без `apk`/`opkg`.
 
 ### 🧰 Вариант A — скриптом из копии проекта
 
@@ -1061,15 +1100,17 @@ panel at a time with a switcher. The panel *model* is unchanged, so
 - LuCI (JS-based views, i.e. any current LuCI)
 - `rpcd` with `rpcd-mod-ucode` (provides the `/usr/share/rpcd/ucode`
   plugin loader)
-- `ucode` (the interpreter itself)
+- `ucode` and its modules `ucode-mod-fs`, `ucode-mod-uci`, `ucode-mod-math`
 - `uhttpd`
 - `luci-lua-runtime` - **only** needed for upload/download (see below);
   everything else (browsing, edit, delete, copy, move, permissions,
   search) works without it
 
-All of the above are standard parts of any router that already runs
-stock LuCI, so on a normal install there is nothing extra to add
-except `ucode`/`rpcd-mod-ucode` if your image is unusually minimal.
+Nearly all of the above is already on any router running stock LuCI -
+`luci-base` itself pulls in `rpcd-mod-ucode`, `ucode`, `ucode-mod-fs` and
+`ucode-mod-uci`. The exception is `ucode-mod-math`, which nothing in LuCI
+pulls in. The installer adds whatever is missing itself; see "Which
+dependencies get installed".
 
 ## Architecture
 
@@ -1195,7 +1236,7 @@ What `install.sh` does:
 |---|---|
 | 🔒 | refuses to run as anyone but root, or on anything but OpenWrt |
 | 📥 | read from a pipe, downloads the branch as an archive into `/tmp` and runs the installer from there (from an unpacked copy it installs straight away) |
-| 📦 | fetches `ucode` and `rpcd-mod-ucode` through `apk` (25.12+) or `opkg` (up to 24.10); `luci-lua-runtime` and `luci-lib-nixio` too, but their absence is a warning rather than a refusal - only upload and download need them |
+| 📦 | installs whatever dependencies are missing through `apk` (25.12+) or `opkg` (up to 24.10) - the list is below |
 | 🔍 | checks `ubus`, `rpcd`, `ucode` and LuCI are present |
 | 🧪 | parses the ucode backend and stops **before touching the live install** if it does not parse |
 | 📄 | copies every file in `deploy/MANIFEST` to its absolute path, leaving an existing `/etc/config/wrtcommander` alone unless `--force-config` is given |
@@ -1205,6 +1246,45 @@ What `install.sh` does:
 
 `uhttpd` is deliberately not restarted: the static files and the Lua
 controller are picked up on the next request.
+
+#### Which dependencies get installed
+
+Only what is missing - anything already installed is left alone, and the
+package index is refreshed only when something actually has to be
+installed.
+
+| package | why | if it cannot be installed |
+|---|---|---|
+| `ucode` | the backend's interpreter | **refuse** |
+| `rpcd-mod-ucode` | the ucode plugin loader in `rpcd` | **refuse** |
+| `ucode-mod-fs` | the backend's file operations | **refuse** |
+| `ucode-mod-uci` | reading `/etc/config/wrtcommander` | **refuse** |
+| `ucode-mod-math` | the temporary name for the editor's atomic save | **refuse** |
+| `luci-lua-runtime` | the upload and download controller | warning |
+| `luci-lib-nixio` | the controller's file operations | warning |
+| `libubus-lua` | the controller's permission check | warning |
+
+The five required ones are what the backend cannot load without. Four of
+them are already on any router with LuCI, since `luci-base` pulls them in.
+`ucode-mod-math` is in nothing LuCI pulls in, though, and the backend
+does not come up without it - so that is the one the installer most often
+reports.
+
+The bottom three are only for upload and download; without them
+everything else - browsing, editing, deleting, copying, moving,
+permissions, search - works. So their absence is a warning, not a refusal.
+`libubus-lua` is listed on its own even though `luci-lua-runtime` brings
+it: without it the controller's permission check fails closed and uploads
+would quietly get a 403, which is better said at install time.
+
+Not installed, only checked: LuCI itself, `rpcd`, `ubus` and `uhttpd`. If
+those are missing this is not a router a LuCI app gets installed on, and
+the installer says so plainly.
+
+There is a second check that does not depend on the package manager: the
+installer runs the backend, and if it cannot load a ucode module the error
+names the package rather than passing itself off as a parse error. That
+covers `--no-deps` and images with no `apk`/`opkg` at all.
 
 ### 🧰 Option A — the script from a copy of the project
 
