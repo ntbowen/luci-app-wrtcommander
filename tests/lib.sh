@@ -4,7 +4,7 @@
 #
 # These tests talk to the real ubus object, so they must run ON the
 # router (or against a router reachable via `ubus -s`), after
-# deploy/install.sh has been run.
+# install.sh has been run.
 
 TESTFS="/tmp/wrtcommander-test"
 PASS=0

@@ -150,8 +150,10 @@ multipart-парсер `luci.http` и потоковый API `setfilehandler()` 
 ## Структура репозитория
 
 ```
+install.sh  установщик — он же обновление; работает и по одной строке
+            из интернета, и из распакованной копии проекта
 runtime/    ровно то, что копируется на роутер (см. deploy/MANIFEST)
-deploy/     install.sh / uninstall.sh / restart.sh / MANIFEST
+deploy/     uninstall.sh / restart.sh / MANIFEST
 po/         переводы: шаблон .pot, исходники .po, сборка и проверка
 tests/      набор тестов для запуска на роутере (функциональные,
             безопасность, загрузка, скачивание, редактор) + генератор
@@ -161,38 +163,66 @@ README.md   этот файл
 
 ## 📦 Установка на роутер
 
-Два пути. Скриптом — быстрее и он сам всё проверяет; вручную — если
-удобнее копировать файлы по одному.
+### ⚡ Одной строкой
 
-### ⚡ Вариант A — скриптом
+На роутере, от root:
+
+```sh
+wget -q -O - https://raw.githubusercontent.com/p0sixxx/luci-app-wrtcommander/main/install.sh | sh
+```
+
+Этой же строкой делается и обновление — установщик один и тот же, он
+просто перезаписывает файлы и сохраняет ваш `/etc/config/wrtcommander`.
+
+Опции передаются через `sh -s --`:
+
+```sh
+# не трогать менеджер пакетов, только проверить зависимости
+wget -q -O - https://raw.githubusercontent.com/p0sixxx/luci-app-wrtcommander/main/install.sh | sh -s -- --no-deps
+
+# перезаписать и конфиг, вернув настройки по умолчанию
+wget -q -O - https://raw.githubusercontent.com/p0sixxx/luci-app-wrtcommander/main/install.sh | sh -s -- --force-config
+```
+
+Если `wget` на роутере не умеет HTTPS (на урезанных образах бывает),
+поставьте `ca-bundle` и `libustream-mbedtls` — установщик об этом и
+скажет.
+
+Что делает `install.sh`:
+
+| | шаг |
+|---|---|
+| 🔒 | отказывается работать не от root и не на OpenWrt |
+| 📥 | прочитанный из конвейера — скачивает ветку архивом в `/tmp` и запускает установщик уже из неё (из распакованной копии ставит сразу) |
+| 📦 | доставляет `ucode` и `rpcd-mod-ucode` через `apk` (25.12+) или `opkg` (до 24.10); `luci-lua-runtime` и `luci-lib-nixio` тоже, но их отсутствие — предупреждение, а не отказ: без них не работают только загрузка и скачивание |
+| 🔍 | проверяет, что на месте `ubus`, `rpcd`, `ucode` и LuCI |
+| 🧪 | разбирает ucode-бэкенд и прерывается **до того, как тронет рабочую установку**, если разбор не удался |
+| 📄 | копирует каждый файл из `deploy/MANIFEST` по его абсолютному пути, не трогая существующий `/etc/config/wrtcommander` (если не передать `--force-config`) |
+| 🗂 | кладёт копию `MANIFEST` и `uninstall.sh` в `/usr/share/luci-app-wrtcommander`, чтобы удаление работало потом без проекта и без интернета |
+| 🔄 | перезагружает `rpcd` и чистит кэши LuCI |
+| ✅ | проверяет, что `luci.wrtcommander` появился в `ubus list` |
+
+`uhttpd` намеренно не перезапускается: статика и Lua-контроллер
+подхватываются на следующем запросе.
+
+### 🧰 Вариант A — скриптом из копии проекта
+
+Если роутер без интернета или вы правите код:
 
 **💻 На рабочей машине**
 
 ```sh
-scp -r runtime deploy root@ROUTER:/tmp/wrtcommander/
+scp -r install.sh runtime deploy root@ROUTER:/tmp/wrtcommander/
 ssh root@ROUTER
 ```
 
 **🖥 На роутере**
 
 ```sh
-cd /tmp/wrtcommander/deploy
-sh install.sh
+sh /tmp/wrtcommander/install.sh
 ```
 
-Что делает `install.sh`:
-
-| | шаг |
-|---|---|
-| 🔒 | отказывается работать не от root |
-| 🔍 | проверяет, что это OpenWrt с `ubus`, `rpcd`, `ucode` и LuCI; предупреждает (но не прерывается), если нет `luci-lua-runtime` |
-| 🧪 | разбирает ucode-бэкенд и прерывается **до того, как тронет рабочую установку**, если разбор не удался |
-| 📄 | копирует каждый файл из `deploy/MANIFEST` по его абсолютному пути, не трогая существующий `/etc/config/wrtcommander` (если не передать `--force-config`) |
-| 🔄 | перезагружает `rpcd` и чистит кэш индекса LuCI |
-| ✅ | проверяет, что `luci.wrtcommander` появился в `ubus list` |
-
-`uhttpd` намеренно не перезапускается: статика и Lua-контроллер
-подхватываются на следующем запросе.
+Тот же установщик, та же таблица выше; просто ничего не скачивает.
 
 ### 🛠 Вариант B — вручную через scp
 
@@ -257,12 +287,19 @@ sh /tmp/wrtcommander/deploy/restart.sh
 Скрипт заново проверяет синтаксис ucode, перезагружает `rpcd` и чистит
 кэш индекса — это быстрый внутренний цикл разработки.
 
+Чтобы просто подтянуть свежую версию из репозитория, повторите установку
+одной строкой: это и есть обновление.
+
 ### Удаление
 
 ```sh
-sh /tmp/wrtcommander/deploy/uninstall.sh          # конфиг остаётся
-sh /tmp/wrtcommander/deploy/uninstall.sh --purge   # удаляет и его
+sh /usr/share/luci-app-wrtcommander/uninstall.sh           # конфиг остаётся
+sh /usr/share/luci-app-wrtcommander/uninstall.sh --purge    # удаляет и его
 ```
+
+Этот путь работает всегда, в том числе после установки одной строкой:
+установщик нарочно оставляет там `uninstall.sh` вместе с `MANIFEST`.
+Из распакованной копии проекта то же самое — `sh deploy/uninstall.sh`.
 
 `uninstall.sh` трогает только те точные абсолютные пути, что перечислены
 в `deploy/MANIFEST` (восемь фиксированных файлов) — он никогда не делает
@@ -1115,8 +1152,10 @@ copy-to-target app this is that adaptation.
 ## Repository layout
 
 ```
+install.sh  the installer, which is also the updater; works both as a
+            one-liner off the internet and from an unpacked copy
 runtime/    exactly what gets copied onto the router (see deploy/MANIFEST)
-deploy/     install.sh / uninstall.sh / restart.sh / MANIFEST
+deploy/     uninstall.sh / restart.sh / MANIFEST
 po/         translations: .pot template, .po sources, build/verify tooling
 tests/      on-router test suite (functional, security, upload,
             download, editor) + test filesystem generator
@@ -1125,38 +1164,66 @@ README.md   this file
 
 ## 📦 Installing on a router
 
-Two ways. The script is quicker and checks itself; by hand is there if
-you would rather copy the files one at a time.
+### ⚡ One line
 
-### ⚡ Option A — the script
-
-**💻 On your workstation**
+On the router, as root:
 
 ```sh
-scp -r runtime deploy root@ROUTER:/tmp/wrtcommander/
+wget -q -O - https://raw.githubusercontent.com/p0sixxx/luci-app-wrtcommander/main/install.sh | sh
+```
+
+The same line updates an existing install - it is one installer either
+way; it overwrites the files and keeps your `/etc/config/wrtcommander`.
+
+Options go through `sh -s --`:
+
+```sh
+# leave the package manager alone, only check the dependencies
+wget -q -O - https://raw.githubusercontent.com/p0sixxx/luci-app-wrtcommander/main/install.sh | sh -s -- --no-deps
+
+# overwrite the config too, back to the defaults
+wget -q -O - https://raw.githubusercontent.com/p0sixxx/luci-app-wrtcommander/main/install.sh | sh -s -- --force-config
+```
+
+If `wget` on the router cannot do HTTPS - which happens on trimmed-down
+images - install `ca-bundle` and `libustream-mbedtls`; the installer says
+so itself.
+
+What `install.sh` does:
+
+| | step |
+|---|---|
+| 🔒 | refuses to run as anyone but root, or on anything but OpenWrt |
+| 📥 | read from a pipe, downloads the branch as an archive into `/tmp` and runs the installer from there (from an unpacked copy it installs straight away) |
+| 📦 | fetches `ucode` and `rpcd-mod-ucode` through `apk` (25.12+) or `opkg` (up to 24.10); `luci-lua-runtime` and `luci-lib-nixio` too, but their absence is a warning rather than a refusal - only upload and download need them |
+| 🔍 | checks `ubus`, `rpcd`, `ucode` and LuCI are present |
+| 🧪 | parses the ucode backend and stops **before touching the live install** if it does not parse |
+| 📄 | copies every file in `deploy/MANIFEST` to its absolute path, leaving an existing `/etc/config/wrtcommander` alone unless `--force-config` is given |
+| 🗂 | keeps a copy of `MANIFEST` and `uninstall.sh` in `/usr/share/luci-app-wrtcommander`, so removal works later without the project and without a network |
+| 🔄 | reloads `rpcd` and clears the LuCI caches |
+| ✅ | checks that `luci.wrtcommander` turned up in `ubus list` |
+
+`uhttpd` is deliberately not restarted: the static files and the Lua
+controller are picked up on the next request.
+
+### 🧰 Option A — the script from a copy of the project
+
+For a router with no internet, or while working on the code:
+
+**💻 On your machine**
+
+```sh
+scp -r install.sh runtime deploy root@ROUTER:/tmp/wrtcommander/
 ssh root@ROUTER
 ```
 
 **🖥 On the router**
 
 ```sh
-cd /tmp/wrtcommander/deploy
-sh install.sh
+sh /tmp/wrtcommander/install.sh
 ```
 
-What `install.sh` does:
-
-| | step |
-|---|---|
-| 🔒 | refuses to run as anything but root |
-| 🔍 | checks this is OpenWrt with `ubus`, `rpcd`, `ucode` and LuCI; warns (but does not abort) if `luci-lua-runtime` is missing |
-| 🧪 | parses the ucode backend and aborts **before touching the live install** if it fails |
-| 📄 | copies every file in `deploy/MANIFEST` to its absolute destination, leaving an existing `/etc/config/wrtcommander` alone unless you pass `--force-config` |
-| 🔄 | reloads `rpcd` and clears LuCI's index cache |
-| ✅ | verifies `luci.wrtcommander` is registered on `ubus list` |
-
-It deliberately never restarts `uhttpd` — static files and the Lua
-controller are picked up on the next request.
+The same installer and the same table above; it just downloads nothing.
 
 ### 🛠 Option B — by hand over scp
 
@@ -1220,12 +1287,20 @@ sh /tmp/wrtcommander/deploy/restart.sh
 This re-validates the ucode syntax, reloads `rpcd`, and clears the
 index cache - the fast inner loop for iterating on the app.
 
+To simply pull the current version from the repository, run the one-line
+install again: that is the update.
+
 ### Uninstalling
 
 ```sh
-sh /tmp/wrtcommander/deploy/uninstall.sh          # keeps your config
-sh /tmp/wrtcommander/deploy/uninstall.sh --purge   # also removes it
+sh /usr/share/luci-app-wrtcommander/uninstall.sh           # keeps your config
+sh /usr/share/luci-app-wrtcommander/uninstall.sh --purge    # also removes it
 ```
+
+That path always works, including after the one-line install: the
+installer leaves `uninstall.sh` there next to `MANIFEST` on purpose. From
+an unpacked copy of the project it is the same thing - `sh
+deploy/uninstall.sh`.
 
 `uninstall.sh` only ever touches the exact absolute paths listed in
 `deploy/MANIFEST` (eight fixed files) - it never does a wildcard or
