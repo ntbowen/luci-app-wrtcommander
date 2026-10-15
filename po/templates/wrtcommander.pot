@@ -17,6 +17,14 @@ msgid "%d B"
 msgstr ""
 
 msgctxt "wrtcommander"
+msgid "%s (%s)"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "%s (broken)"
+msgstr ""
+
+msgctxt "wrtcommander"
 msgid "%s GiB"
 msgstr ""
 
@@ -34,6 +42,14 @@ msgstr ""
 
 msgctxt "wrtcommander"
 msgid "Accessed"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Already exists"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Already exists in destination"
 msgstr ""
 
 msgctxt "wrtcommander"
@@ -58,6 +74,10 @@ msgstr ""
 
 msgctxt "wrtcommander"
 msgid "At least %s: the folder is too large to measure in full."
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Bad file descriptor"
 msgstr ""
 
 msgctxt "wrtcommander"
@@ -93,7 +113,27 @@ msgid "Cancel"
 msgstr ""
 
 msgctxt "wrtcommander"
+msgid "Cannot change owner"
+msgstr ""
+
+msgctxt "wrtcommander"
 msgid "Cannot change permissions"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Cannot copy a directory into itself"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Cannot copy special file"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Cannot create destination file"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Cannot create directory"
 msgstr ""
 
 msgctxt "wrtcommander"
@@ -105,11 +145,35 @@ msgid "Cannot create folder"
 msgstr ""
 
 msgctxt "wrtcommander"
+msgid "Cannot create symlink"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Cannot create temporary file"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Cannot download a directory"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Cannot move a directory into itself"
+msgstr ""
+
+msgctxt "wrtcommander"
 msgid "Cannot open directory"
 msgstr ""
 
 msgctxt "wrtcommander"
 msgid "Cannot open file"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Cannot open source directory"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Cannot open source file"
 msgstr ""
 
 msgctxt "wrtcommander"
@@ -121,7 +185,19 @@ msgid "Cannot read properties"
 msgstr ""
 
 msgctxt "wrtcommander"
+msgid "Cannot read symlink"
+msgstr ""
+
+msgctxt "wrtcommander"
 msgid "Cannot read the archive."
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Cannot remove directory"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Cannot remove file"
 msgstr ""
 
 msgctxt "wrtcommander"
@@ -129,7 +205,27 @@ msgid "Cannot rename"
 msgstr ""
 
 msgctxt "wrtcommander"
+msgid "Cannot run df"
+msgstr ""
+
+msgctxt "wrtcommander"
 msgid "Cannot save file"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Cannot stat"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Cannot stat file"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Cannot stat path"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Cannot stat source"
 msgstr ""
 
 msgctxt "wrtcommander"
@@ -161,7 +257,15 @@ msgid "Confirm delete"
 msgstr ""
 
 msgctxt "wrtcommander"
+msgid "Content exceeds the editor size limit (%d bytes)"
+msgstr ""
+
+msgctxt "wrtcommander"
 msgid "Copied"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Copied but failed to remove source"
 msgstr ""
 
 msgctxt "wrtcommander"
@@ -205,6 +309,10 @@ msgid "Deleted"
 msgstr ""
 
 msgctxt "wrtcommander"
+msgid "Destination is not a directory"
+msgstr ""
+
+msgctxt "wrtcommander"
 msgid "Destination: %s"
 msgstr ""
 
@@ -213,7 +321,15 @@ msgid "Device"
 msgstr ""
 
 msgctxt "wrtcommander"
+msgid "Device or resource busy"
+msgstr ""
+
+msgctxt "wrtcommander"
 msgid "Directory"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Directory not empty"
 msgstr ""
 
 msgctxt "wrtcommander"
@@ -241,11 +357,23 @@ msgid "Editor"
 msgstr ""
 
 msgctxt "wrtcommander"
+msgid "Empty query"
+msgstr ""
+
+msgctxt "wrtcommander"
 msgid "Execute"
 msgstr ""
 
 msgctxt "wrtcommander"
 msgid "FIFO"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Failed to resolve parent path"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Failed to resolve path"
 msgstr ""
 
 msgctxt "wrtcommander"
@@ -266,6 +394,18 @@ msgstr ""
 
 msgctxt "wrtcommander"
 msgid "File created"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "File exists"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "File has been modified externally"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "File is too large for %s (%d bytes, limit %d bytes)"
 msgstr ""
 
 msgctxt "wrtcommander"
@@ -309,7 +449,43 @@ msgid "Image"
 msgstr ""
 
 msgctxt "wrtcommander"
+msgid "Input/output error"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Invalid cross-device link"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Invalid data encoding"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Invalid destination"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Invalid filename"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Invalid mode"
+msgstr ""
+
+msgctxt "wrtcommander"
 msgid "Invalid name"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Invalid path"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Invalid target path"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Is a directory"
 msgstr ""
 
 msgctxt "wrtcommander"
@@ -373,6 +549,10 @@ msgid "Name is too long"
 msgstr ""
 
 msgctxt "wrtcommander"
+msgid "Name too long"
+msgstr ""
+
+msgctxt "wrtcommander"
 msgid "Navigation"
 msgstr ""
 
@@ -385,11 +565,55 @@ msgid "New folder"
 msgstr ""
 
 msgctxt "wrtcommander"
+msgid "No file received"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "No items given"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "No output from df"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "No paths given"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "No space left on device"
+msgstr ""
+
+msgctxt "wrtcommander"
 msgid "No subdirectories"
 msgstr ""
 
 msgctxt "wrtcommander"
+msgid "No such file or directory"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "No uid/gid given"
+msgstr ""
+
+msgctxt "wrtcommander"
 msgid "Not a ZIP archive, or it is damaged."
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Not a directory"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Not a regular file"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Not a text file"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Not found"
 msgstr ""
 
 msgctxt "wrtcommander"
@@ -417,6 +641,14 @@ msgid "Operation failed"
 msgstr ""
 
 msgctxt "wrtcommander"
+msgid "Operation not permitted"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Operation not permitted on the root directory"
+msgstr ""
+
+msgctxt "wrtcommander"
 msgid "Others"
 msgstr ""
 
@@ -433,11 +665,43 @@ msgid "Panels"
 msgstr ""
 
 msgctxt "wrtcommander"
+msgid "Parent directory does not exist"
+msgstr ""
+
+msgctxt "wrtcommander"
 msgid "Part of a file name"
 msgstr ""
 
 msgctxt "wrtcommander"
 msgid "Path"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Path contains a NUL byte"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Path escapes the allowed root via a symlink"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Path is empty"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Path is not a string"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Path is outside the allowed root"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Path must be absolute"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Permission denied"
 msgstr ""
 
 msgctxt "wrtcommander"
@@ -465,6 +729,10 @@ msgid "Read"
 msgstr ""
 
 msgctxt "wrtcommander"
+msgid "Read-only file system"
+msgstr ""
+
+msgctxt "wrtcommander"
 msgid "Reading %s…"
 msgstr ""
 
@@ -474,6 +742,10 @@ msgstr ""
 
 msgctxt "wrtcommander"
 msgid "Refresh the active panel"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Refusing to download a non-regular file"
 msgstr ""
 
 msgctxt "wrtcommander"
@@ -605,6 +877,10 @@ msgid "Sort folders above files, whatever the sort column."
 msgstr ""
 
 msgctxt "wrtcommander"
+msgid "Source and destination are the same"
+msgstr ""
+
+msgctxt "wrtcommander"
 msgid "Switch panel"
 msgstr ""
 
@@ -614,6 +890,10 @@ msgstr ""
 
 msgctxt "wrtcommander"
 msgid "Symlink target"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Target already exists"
 msgstr ""
 
 msgctxt "wrtcommander"
@@ -665,11 +945,19 @@ msgid "Too many matches, only the first %d are shown."
 msgstr ""
 
 msgctxt "wrtcommander"
+msgid "Too many open files"
+msgstr ""
+
+msgctxt "wrtcommander"
 msgid "Type"
 msgstr ""
 
 msgctxt "wrtcommander"
 msgid "Type a path and press Enter"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Unexpected df output"
 msgstr ""
 
 msgctxt "wrtcommander"
@@ -733,15 +1021,19 @@ msgid "Write"
 msgstr ""
 
 msgctxt "wrtcommander"
+msgid "Write failed (disk full or I/O error)"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Wrt Commander is disabled"
+msgstr ""
+
+msgctxt "wrtcommander"
 msgid "You have unsaved changes. Discard them?"
 msgstr ""
 
 msgctxt "wrtcommander"
 msgid "ZIP64 archives are not supported."
-msgstr ""
-
-msgctxt "wrtcommander"
-msgid "broken"
 msgstr ""
 
 msgctxt "wrtcommander"
@@ -793,14 +1085,32 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgctxt "wrtcommander"
+msgid "Copy — %d item"
+msgid_plural "Copy — %d items"
+msgstr[0] ""
+msgstr[1] ""
+
+msgctxt "wrtcommander"
 msgid "Delete %d selected item?"
 msgid_plural "Delete %d selected items?"
 msgstr[0] ""
 msgstr[1] ""
 
 msgctxt "wrtcommander"
+msgid "Delete — %d item"
+msgid_plural "Delete — %d items"
+msgstr[0] ""
+msgstr[1] ""
+
+msgctxt "wrtcommander"
 msgid "Move %d item to:"
 msgid_plural "Move %d items to:"
+msgstr[0] ""
+msgstr[1] ""
+
+msgctxt "wrtcommander"
+msgid "Move — %d item"
+msgid_plural "Move — %d items"
 msgstr[0] ""
 msgstr[1] ""
 

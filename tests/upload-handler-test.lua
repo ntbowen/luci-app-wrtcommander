@@ -16,10 +16,10 @@ local TMP = "/tmp/wrtcommander-uploadtest"
 os.execute("rm -rf " .. TMP .. " && mkdir -p " .. TMP)
 
 local HERE = arg[0]:match("(.*)/") or "."
-local CTRL = HERE .. "/../runtime/usr/lib/lua/luci/controller/wrtcommander.lua"
+local CTRL = HERE .. "/../root/usr/lib/lua/luci/controller/wrtcommander.lua"
 
 local src = assert(io.open(CTRL, "r"), "controller not found at " .. CTRL):read("*a")
-local HANDLER_SRC = src:match("http%\.setfilehandler%\(function%\(meta, chunk, eof%\)\n(.-)\n\tend%\)")
+local HANDLER_SRC = src:match("http%.setfilehandler%(function%(meta, chunk, eof%)\n(.-)\n\tend%)")
 assert(HANDLER_SRC, "could not lift the file handler out of " .. CTRL)
 
 local function readfile(p)

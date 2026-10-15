@@ -19,7 +19,10 @@ What it checks, per message in the .po:
   * the Plural-Forms expression is stored under key id 0
 
 Usage:  python3 po/verify-lmo.py po/ru/wrtcommander.po \\
-                runtime/usr/lib/lua/luci/i18n/wrtcommander.ru.lmo
+                /tmp/wrtcommander.ru.lmo
+
+        (any .lmo works - one built locally with po2lmo, or the catalog
+        unpacked from a luci-i18n-wrtcommander-*.apk)
 """
 
 import re

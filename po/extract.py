@@ -3,10 +3,10 @@
 Extract translatable strings from the Wrt Commander LuCI view into a
 gettext .pot template.
 
-LuCI's own build uses xgettext with custom keywords; this project is
-deployed by copying files rather than through the OpenWrt build system,
-so this small extractor keeps po/templates/wrtcommander.pot in sync
-without needing the LuCI build host tools.
+LuCI's own build uses xgettext with custom keywords (build/i18n-scan.pl);
+this small extractor keeps po/templates/wrtcommander.pot in sync the same
+way without needing the LuCI build host tools, so the template can be
+refreshed anywhere, not only inside a buildroot.
 
 It collects strings from two places, matching what LuCI's own
 build-time scan does:
@@ -38,8 +38,8 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-SOURCE = os.path.join(ROOT, 'runtime/www/luci-static/resources/view/wrtcommander.js')
-MENU = os.path.join(ROOT, 'runtime/usr/share/luci/menu.d/luci-app-wrtcommander.json')
+SOURCE = os.path.join(ROOT, 'htdocs/luci-static/resources/view/wrtcommander.js')
+MENU = os.path.join(ROOT, 'root/usr/share/luci/menu.d/luci-app-wrtcommander.json')
 OUTPUT = os.path.join(HERE, 'templates/wrtcommander.pot')
 
 STR = r"'((?:[^'\\]|\\.)*)'"

@@ -3,8 +3,8 @@
 # Source this from the other tests/*.sh scripts:  . "$(dirname "$0")/lib.sh"
 #
 # These tests talk to the real ubus object, so they must run ON the
-# router (or against a router reachable via `ubus -s`), after
-# install.sh has been run.
+# router (or against a router reachable via `ubus -s`), after the
+# package has been installed.
 
 TESTFS="/tmp/wrtcommander-test"
 PASS=0

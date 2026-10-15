@@ -71,12 +71,12 @@
 @media (min-width: 901px) {
 
 #maincontent.fx-wide {
-	/* Two thirds of the window: wide enough that the two panels stop
-	   feeling cramped, narrow enough that a row of file names is still a
-	   comfortable line to scan on a large display. Never below the
-	   theme's own cap, so this can only ever add room, never take it
-	   away on a small screen. */
-	max-width: max(var(--proton-page-max-width, 990px), 67.5%);
+	/* Track the window: the two panels take whatever width the display
+	   actually has. Never below the theme's own cap, so this can only
+	   ever add room, never take it away on a small screen, and
+	   widenContainer() drops the class again if a theme's own layout
+	   would push the result off the window edge. */
+	max-width: max(var(--proton-page-max-width, 990px), calc(100vw - 2em));
 }
 
 }
@@ -125,7 +125,14 @@ h2.fx-title {
 .fx-act-ico {
 	/* the glyph is the label here - the wording only exists in the
 	   tooltip - so it is sized to be read at a glance rather than to
-	   match the text next to it */
+	   match the text next to it. The fixed square keeps every button
+	   the same width: emoji advance widths differ by a few percent
+	   between faces, which read as a wobbly row otherwise. */
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 1em;
+	height: 1em;
 	font-size: 1.35em;
 	line-height: 1;
 }
@@ -627,9 +634,25 @@ h2.fx-title {
 	cursor: pointer;
 }
 
+/* The full margin, not just the top: kucat centres every bare input
+   with `margin: .2em auto`, which leaves an auto left margin that
+   pushes the control to the middle of the row. */
 .fx-set-row input[type="checkbox"] {
 	flex: 0 0 auto;
-	margin-top: .15em;
+	margin: .15em 0 0;
+}
+
+/* Themes that centre a modal's content (kucat shrinks and centres
+   label controls, for one) must not drag these rows with them: keep
+   each row a full-width, left-justified flex row regardless of what
+   display or justification the theme imposes on modal children. */
+.modal .fx-set-row {
+	display: flex;
+	justify-content: flex-start;
+	width: 100%;
+	box-sizing: border-box;
+	margin-left: 0;
+	margin-right: 0;
 }
 
 .fx-set-text {

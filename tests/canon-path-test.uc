@@ -18,7 +18,7 @@
 import * as fs from 'fs';
 
 let here = sourcepath(0, true) ?? '.';
-let SRC = getenv('CANON_TEST_SRC') ?? (here + '/../runtime/usr/share/rpcd/ucode/wrtcommander.uc');
+let SRC = getenv('CANON_TEST_SRC') ?? (here + '/../root/usr/share/rpcd/ucode/wrtcommander.uc');
 
 let src = fs.readfile(SRC);
 if (!src) {

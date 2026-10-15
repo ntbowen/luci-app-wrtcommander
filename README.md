@@ -1,14 +1,14 @@
 # Wrt Commander
 
-**Русский** · [English](#wrt-commander-english)
+**Русский** · [English](#wrt-commander-english) · [简体中文](#wrt-commander-简体中文)
 
 **Wrt Commander** — двухпанельный файловый менеджер для LuCI на OpenWrt,
 рассчитанный на того, кто администрирует роутер. Раскладка та, которую
 сделали стандартом Norton, Midnight и Total Commander: две независимые
 панели каталогов рядом, одна из них активная, и любая операция по
 умолчанию идёт «из активной панели в противоположную». Полный набор
-файловых операций, управление и с клавиатуры, и мышью, русский и
-английский интерфейс, тёмная и светлая темы, работа как с компьютера,
+файловых операций, управление и с клавиатуры, и мышью, английский,
+русский и упрощённый китайский интерфейс, тёмная и светлая темы, работа как с компьютера,
 так и с телефона.
 
 ![Тёмная тема Proton2025](docs/img/desktop-dark-ru.png)
@@ -42,7 +42,7 @@
   конфликта
 - Правка прав доступа (chmod) и владельца/группы (chown)
 - Поиск по имени файла, в текущем каталоге или рекурсивно, с лимитами
-- **Английский и русский** через штатный конвейер gettext/`.lmo` LuCI
+- **Английский, русский и упрощённый китайский** через штатный конвейер gettext/`.lmo` LuCI
 - Единственный обязательный слой проверки путей, общий для всех
   операций, написанный так, чтобы устоять против `../`, кодированного
   обхода и побега через симлинк (см. **Модель безопасности**)
@@ -136,26 +136,24 @@ multipart-парсер `luci.http` и потоковый API `setfilehandler()` 
 безопасный способ перегонять большие файлы, не буферизуя их целиком в
 ОЗУ, а переписывать это с нуля на ucode поверх сырых CGI-примитивов
 `uhttpd` было сочтено худшим компромиссом по безопасности для первого
-этапа. Если в образе роутера нет `luci-lua-runtime`, пострадают ровно
-две функции — загрузка и скачивание; `install.sh` это проверяет и
-предупреждает, а не падает.
+этапа. `luci-lua-runtime` объявлен прямой зависимостью пакета, поэтому
+`apk`/`opkg` доставляет его сам.
 
-### `src/` против `runtime/`
+### Раскладка — стандартный пакет LuCI
 
-Каталога `src/` нет: раз ничего не компилируется и не транспилируется,
-`runtime/` **и есть** исходники. Дублирование в отдельное дерево `src/`
-создало бы только риск расхождения двух копий без всякой пользы —
-техзадание разрешает адаптировать предложенную раскладку под реальную
-архитектуру, и для интерпретируемого приложения, копируемого на целевое
-устройство, это именно такая адаптация.
+Проект оформлен в обычной для `luci-app-*` раскладке: `root/` копируется
+на роутер по тем же абсолютным путям, `htdocs/` ложится под `/www`,
+`po/` — исходники переводов, из которых `luci.mk` при сборке компилирует
+подпакеты `luci-i18n-wrtcommander-<lang>`. Каталога `src/` нет:
+ничего не компилируется и не транспилируется, исходники **и есть** то,
+что попадает на устройство.
 
 ## Структура репозитория
 
 ```
-install.sh  установщик — он же обновление; работает и по одной строке
-            из интернета, и из распакованной копии проекта
-runtime/    ровно то, что копируется на роутер (см. deploy/MANIFEST)
-deploy/     uninstall.sh / restart.sh / MANIFEST
+Makefile    сборка пакета в OpenWrt buildroot (luci.mk)
+root/       файлы, ложащиеся на роутер по тем же абсолютным путям
+htdocs/     статика LuCI (ложится под /www)
 po/         переводы: шаблон .pot, исходники .po, сборка и проверка
 tests/      набор тестов для запуска на роутере (функциональные,
             безопасность, загрузка, скачивание, редактор) + генератор
@@ -165,139 +163,64 @@ README.md   этот файл
 
 ## 📦 Установка на роутер
 
-### ⚡ Одной строкой
+Проект ставится как обычный пакет OpenWrt — собранный `Makefile`'ом
+`.apk` (и подпакеты `luci-i18n-wrtcommander-*` с переводами).
 
-На роутере, от root:
+### 🔨 Сборка
 
-```sh
-wget -q -O - https://raw.githubusercontent.com/p0sixxx/luci-app-wrtcommander/main/install.sh | sh
-```
-
-Этой же строкой делается и обновление — установщик один и тот же, он
-просто перезаписывает файлы и сохраняет ваш `/etc/config/wrtcommander`.
-
-Опции передаются через `sh -s --`:
+Скопируйте каталог в дерево OpenWrt (`package/` или фид) и соберите
+обычной командой:
 
 ```sh
-# не трогать менеджер пакетов, только проверить зависимости
-wget -q -O - https://raw.githubusercontent.com/p0sixxx/luci-app-wrtcommander/main/install.sh | sh -s -- --no-deps
-
-# перезаписать и конфиг, вернув настройки по умолчанию
-wget -q -O - https://raw.githubusercontent.com/p0sixxx/luci-app-wrtcommander/main/install.sh | sh -s -- --force-config
+make package/luci-app-wrtcommander/compile
 ```
 
-Если `wget` на роутере не умеет HTTPS (на урезанных образах бывает),
-поставьте `ca-bundle` и `libustream-mbedtls` — установщик об этом и
-скажет.
+Готовые пакеты лежат в `bin/packages/<arch>/base/`:
+`luci-app-wrtcommander-*.apk` плюс по одному
+`luci-i18n-wrtcommander-<lang>-*.apk` на каждый язык, включённый в
+конфигурацию образа (LuCI → Translations).
 
-Что делает `install.sh`:
+### 📥 Установка
 
-| | шаг |
+```sh
+# 💻 на рабочей машине
+scp bin/packages/*/base/luci-*wrtcommander*.apk root@ROUTER:/tmp/
+
+# 🖥 на роутере — локальный файл, репозитории не нужны
+apk add --allow-untrusted --no-network /tmp/luci-*wrtcommander*.apk
+```
+
+На системах с `opkg` (до 24.10) вместо этого:
+`opkg install /tmp/luci-*wrtcommander*.ipk`.
+
+Зависимости объявлены в `LUCI_DEPENDS`, так что при установке из
+репозитория менеджер пакетов подтягивает их сам; при установке локального
+файла они должны быть уже в образе (все они есть в стандартной сборке с
+LuCI). `/etc/config/wrtcommander` объявлен в `Package/conffiles` —
+настройки переживают обновление.
+
+#### Какие зависимости нужны
+
+| пакет | зачем |
 |---|---|
-| 🔒 | отказывается работать не от root и не на OpenWrt |
-| 📥 | прочитанный из конвейера — скачивает ветку архивом в `/tmp` и запускает установщик уже из неё (из распакованной копии ставит сразу) |
-| 📦 | доставляет недостающие зависимости через `apk` (25.12+) или `opkg` (до 24.10) — список ниже |
-| 🔍 | проверяет, что на месте `ubus`, `rpcd`, `ucode` и LuCI |
-| 🧪 | разбирает ucode-бэкенд и прерывается **до того, как тронет рабочую установку**, если разбор не удался |
-| 📄 | копирует каждый файл из `deploy/MANIFEST` по его абсолютному пути, не трогая существующий `/etc/config/wrtcommander` (если не передать `--force-config`) |
-| 🗂 | кладёт копию `MANIFEST` и `uninstall.sh` в `/usr/share/luci-app-wrtcommander`, чтобы удаление работало потом без проекта и без интернета |
-| 🔄 | перезагружает `rpcd` и чистит кэши LuCI |
-| ✅ | проверяет, что `luci.wrtcommander` появился в `ubus list` |
+| `ucode` | интерпретатор бэкенда |
+| `rpcd-mod-ucode` | загрузчик ucode-плагинов в `rpcd` |
+| `ucode-mod-fs` | файловые операции бэкенда |
+| `ucode-mod-uci` | чтение `/etc/config/wrtcommander` |
+| `ucode-mod-math` | имя временного файла при атомарном сохранении в редакторе |
+| `luci-lua-runtime` | Lua-контроллер загрузки и скачивания |
+| `luci-lib-nixio` | файловые операции контроллера |
+| `libubus-lua` | проверка прав в контроллере |
 
-`uhttpd` намеренно не перезапускается: статика и Lua-контроллер
-подхватываются на следующем запросе.
-
-#### Какие зависимости ставятся
-
-Ставится только то, чего нет, — уже установленное не трогается, а индекс
-пакетов обновляется, только если что-то действительно надо поставить.
-
-| пакет | зачем | если не поставился |
-|---|---|---|
-| `ucode` | интерпретатор бэкенда | **отказ** |
-| `rpcd-mod-ucode` | загрузчик ucode-плагинов в `rpcd` | **отказ** |
-| `ucode-mod-fs` | файловые операции бэкенда | **отказ** |
-| `ucode-mod-uci` | чтение `/etc/config/wrtcommander` | **отказ** |
-| `ucode-mod-math` | имя временного файла при атомарном сохранении в редакторе | **отказ** |
-| `luci-lua-runtime` | Lua-контроллер загрузки и скачивания | предупреждение |
-| `luci-lib-nixio` | файловые операции контроллера | предупреждение |
-| `libubus-lua` | проверка прав в контроллере | предупреждение |
-
-Обязательные пять — то, без чего бэкенд не загрузится вообще. Первые
-четыре из них на любом роутере с LuCI уже стоят: их тянет `luci-base`.
-А вот `ucode-mod-math` не тянет ничто из LuCI, и без него бэкенд не
-поднимется — его установщик и докладывает чаще всего.
+Первые пять — то, без чего бэкенд не загрузится вообще. Четыре из них на
+любом роутере с LuCI уже стоят: их тянет `luci-base`. А вот
+`ucode-mod-math` не тянет ничто из LuCI, и без него бэкенд не поднимется.
 
 Нижние три нужны только загрузке и скачиванию; без них всё остальное —
 просмотр, правка, удаление, копирование, перемещение, права, поиск —
-работает. Поэтому их отсутствие — предупреждение, а не отказ. `libubus-lua`
-стоит в списке отдельно, хотя его и тянет `luci-lua-runtime`: без него
-проверка прав в контроллере закрывается наглухо, и загрузка молча
-отвечала бы 403 — лучше сказать об этом при установке.
-
-Что **не** ставится, а только проверяется: сам LuCI, `rpcd`, `ubus` и
-`uhttpd`. Если их нет, это не тот роутер, на который ставят LuCI-приложение,
-и установщик скажет об этом прямо.
-
-Есть и вторая проверка, не зависящая от менеджера пакетов: установщик
-запускает бэкенд, и если тот не может подгрузить ucode-модуль, ошибка
-называет пакет, а не выдаёт себя за ошибку разбора. Это ловит и случай
-`--no-deps`, и образ вовсе без `apk`/`opkg`.
-
-### 🧰 Вариант A — скриптом из копии проекта
-
-Если роутер без интернета или вы правите код:
-
-**💻 На рабочей машине**
-
-```sh
-scp -r install.sh runtime deploy root@ROUTER:/tmp/wrtcommander/
-ssh root@ROUTER
-```
-
-**🖥 На роутере**
-
-```sh
-sh /tmp/wrtcommander/install.sh
-```
-
-Тот же установщик, та же таблица выше; просто ничего не скачивает.
-
-### 🛠 Вариант B — вручную через scp
-
-**🖥 На роутере — до копирования** (каталог новый, иначе `scp` упадёт):
-
-```sh
-mkdir -p /www/luci-static/resources/wrtcommander
-```
-
-**💻 На рабочей машине** — из каталога `runtime/`:
-
-```sh
-cd runtime
-scp etc/config/wrtcommander                                 root@ROUTER:/etc/config/wrtcommander
-scp usr/share/rpcd/ucode/wrtcommander.uc                    root@ROUTER:/usr/share/rpcd/ucode/wrtcommander.uc
-scp usr/share/rpcd/acl.d/luci-app-wrtcommander.json         root@ROUTER:/usr/share/rpcd/acl.d/luci-app-wrtcommander.json
-scp usr/share/luci/menu.d/luci-app-wrtcommander.json        root@ROUTER:/usr/share/luci/menu.d/luci-app-wrtcommander.json
-scp usr/lib/lua/luci/controller/wrtcommander.lua            root@ROUTER:/usr/lib/lua/luci/controller/wrtcommander.lua
-scp usr/lib/lua/luci/i18n/wrtcommander.ru.lmo               root@ROUTER:/usr/lib/lua/luci/i18n/wrtcommander.ru.lmo
-scp www/luci-static/resources/view/wrtcommander.js          root@ROUTER:/www/luci-static/resources/view/wrtcommander.js
-scp www/luci-static/resources/wrtcommander/wrtcommander.css root@ROUTER:/www/luci-static/resources/wrtcommander/wrtcommander.css
-```
-
-Или одной командой:
-
-```sh
-cd runtime && tar cf - . | ssh root@ROUTER "mkdir -p /www/luci-static/resources/wrtcommander && tar xf - -C /"
-```
-
-**🖥 На роутере — после копирования** 🔄
-
-```sh
-rm -f /tmp/luci-indexcache* /tmp/luci-modulecache/*
-/etc/init.d/rpcd restart
-/etc/init.d/uhttpd restart
-```
+работает. Они объявлены прямыми зависимостями нарочно: `libubus-lua` и так
+тянет `luci-lua-runtime`, но без него проверка прав в контроллере
+закрывается наглухо, и загрузка молча отвечала бы 403.
 
 ### ✅ Проверка
 
@@ -316,40 +239,36 @@ ucode /usr/share/rpcd/ucode/wrtcommander.uc
 
 ### Повторное развёртывание после правок
 
-Отредактируйте файлы в `runtime/`, скопируйте изменённые через `scp`,
-затем:
+Отредактируйте файлы в `root/`/`htdocs/`, скопируйте изменённые через
+`scp` по тем же абсолютным путям, затем на роутере:
 
 ```sh
-sh /tmp/wrtcommander/deploy/restart.sh
+ucode /usr/share/rpcd/ucode/wrtcommander.uc    # бэкенд разбирается?
+rm -f /tmp/luci-indexcache* /tmp/luci-modulecache/*
+/etc/init.d/rpcd reload
 ```
 
-Скрипт заново проверяет синтаксис ucode, перезагружает `rpcd` и чистит
-кэш индекса — это быстрый внутренний цикл разработки.
-
-Чтобы просто подтянуть свежую версию из репозитория, повторите установку
-одной строкой: это и есть обновление.
+Это быстрый внутренний цикл разработки. Чтобы поставить свежую версию
+целиком, соберите и установите новый `.apk` — менеджер пакетов сам заменит
+файлы, конфиг сохранится.
 
 ### Удаление
 
 ```sh
-sh /usr/share/luci-app-wrtcommander/uninstall.sh           # конфиг остаётся
-sh /usr/share/luci-app-wrtcommander/uninstall.sh --purge    # удаляет и его
+apk del luci-app-wrtcommander luci-i18n-wrtcommander-zh-cn
 ```
 
-Этот путь работает всегда, в том числе после установки одной строкой:
-установщик нарочно оставляет там `uninstall.sh` вместе с `MANIFEST`.
-Из распакованной копии проекта то же самое — `sh deploy/uninstall.sh`.
-
-`uninstall.sh` трогает только те точные абсолютные пути, что перечислены
-в `deploy/MANIFEST` (восемь фиксированных файлов) — он никогда не делает
-удаление по маске или рекурсивно, поэтому по построению не может
-добраться до пользовательских данных или посторонних файлов OpenWrt.
+`postinst`/`prerm` пакета перезагружают `rpcd` и чистят кэши LuCI.
+`/etc/config/wrtcommander` — conffile: изменённый конфиг при удалении
+сохраняется; для полной очистки удалите файл вручную.
 
 ## Тестирование
 
+Скопируйте `tests/` на роутер и запустите там:
+
 ```sh
-cd /tmp/wrtcommander/tests
-sh run-all.sh
+scp -r tests root@ROUTER:/tmp/wrtcommander-tests/
+ssh root@ROUTER 'cd /tmp/wrtcommander-tests && sh run-all.sh'
 ```
 
 Скрипт строит одноразовое тестовое дерево в `/tmp/wrtcommander-test/`
@@ -545,7 +464,7 @@ config wrtcommander 'main'
 ```sh
 uci set wrtcommander.main.debug='1'
 uci commit wrtcommander
-sh deploy/restart.sh
+/etc/init.d/rpcd reload
 tail -f /tmp/wrtcommander-debug.log
 ```
 
@@ -936,7 +855,8 @@ this.handleSave || this.handleReset)`). Здесь обнулены все тр�
 
 ## Языки
 
-Интерфейс полностью переведён на **английский и русский** штатным
+Интерфейс полностью переведён на **английский, русский и упрощённый
+китайский** штатным
 конвейером gettext в LuCI, поэтому следует за тем языком, на который
 настроен сам LuCI:
 
@@ -948,11 +868,11 @@ uci commit luci
 или **Система → Система → Язык**. При `lang=auto` LuCI следует за
 `Accept-Language` браузера.
 
-Скомпилированный каталог устанавливается в
-`/usr/lib/lua/luci/i18n/wrtcommander.ru.lmo`. Учтите, что он переводит
+Скомпилированные каталоги устанавливаются подпакетами
+`luci-i18n-wrtcommander-<lang>` в
+`/usr/lib/lua/luci/i18n/wrtcommander.<lang>.lmo`. Учтите, что они переводят
 *Wrt Commander*; чтобы окружающий интерфейс LuCI тоже был русским, нужен
-собственный каталог LuCI (`luci-i18n-base-ru`) — `install.sh`
-предупреждает, если его нет.
+собственный каталог LuCI (`luci-i18n-base-ru`).
 
 **Пункт меню тоже проходит через каталог**, хотя и разрешается в
 «Wrt Commander» на любом языке: имя продукта — это имя, а не описание,
@@ -1013,39 +933,26 @@ uci commit luci
   каретки, пока фокус на списке файлов, — но у каждого действия
   F-клавиши есть и кнопка, так что ничто не зависит от сговорчивости
   браузера.
-- **Переводы поставляются предкомпилированными.** `.lmo` — двоичный
-  формат, который собирает `po2lmo` из LuCI; правка `.po` здесь ни на
-  что не влияет, пока каталог не пересобран (см. `po/README.md`).
+- **Переводы собираются при сборке пакета.** `.lmo` — двоичный формат,
+  который `luci.mk` компилирует из `po/` через `po2lmo`; правка `.po`
+  здесь ни на что не влияет, пока пакет не пересобран (см. `po/README.md`).
 - В этой сессии ещё не обкатано на живом железе OpenWrt 25.12.x — см.
-  **Тестирование** и **Следующий шаг** ниже.
+  **Тестирование** и **Сборку пакетом** ниже.
 
-## Следующий шаг: превращение в настоящий пакет OpenWrt
+## Сборка как настоящий пакет OpenWrt
 
-1. Написать `Makefile` по конечному назначению каждого файла из
-   `runtime/` (это почти один в один ложится на `deploy/MANIFEST`,
-   который писался ровно с расчётом на такое повторное использование).
-2. Объявить настоящие `DEPENDS` (`rpcd`, `rpcd-mod-ucode`, `ucode`,
-   `uhttpd`, `luci-base`, `luci-lua-runtime`).
-3. Перенести `/etc/config/wrtcommander` под `define Package/conffiles`,
-   чтобы opkg считал его пользовательской конфигурацией при обновлениях.
-4. Добавить скрипты `postinst`/`prerm`, делающие то же, что уже делают
-   `install.sh`/`uninstall.sh` (перезагрузка `rpcd`, очистка кэша
-   индекса), за вычетом того, что относится к ручному копированию.
-5. Убрать закоммиченный `.lmo` и дать сборке производить его: подключение
-   `$(TOPDIR)/feeds/luci/luci.mk` заставляет `luci.mk` компилировать
-   `po/<lang>/*.po` и автоматически выпускать подпакеты
-   `luci-i18n-wrtcommander-<lang>`, что и есть обычный способ поставки
-   переводов. Раскладка `po/` здесь уже соответствует ожиданиям
-   `luci.mk`, так что этот шаг должен быть удалением, а не переписыванием.
-6. Собрать и протестировать `.ipk` с помощью OpenWrt SDK, затем прогнать
-   этот же набор `tests/` на роутере, куда пакет поставлен через `opkg`,
-   а не `scp`.
+В корне лежит `Makefile` в раскладке `luci.mk` (`root/` → `/`, `htdocs/` →
+`/www`, `po/<lang>/` → подпакеты `luci-i18n-wrtcommander-<lang>`), так что
+каталог можно скопировать в `package/` или в фид и собрать обычным
+`make package/luci-app-wrtcommander/compile`. `/etc/config/wrtcommander`
+объявлен в `Package/conffiles`, а `postinst`/`prerm` перезагружают
+`rpcd` и чистят кэш индекса LuCI.
 
 ---
 
 # Wrt Commander (English)
 
-[Русский](#wrt-commander) · **English**
+[Русский](#wrt-commander) · **English** · [简体中文](#wrt-commander-简体中文)
 
 **Wrt Commander** is a two-pane file manager for LuCI on OpenWrt, built
 for whoever administers the router. The layout is the one Norton,
@@ -1053,7 +960,7 @@ Midnight and Total Commander made standard: two independent directory
 panels side by side, one of them active, and every operation defaulting
 to "from the active panel to the other one". It covers the full set of
 file operations, is driven equally from the keyboard or the mouse, speaks
-English and Russian, comes in a light or a dark theme, and works from a
+English, Russian and Simplified Chinese, comes in a light or a dark theme, and works from a
 phone as readily as from a desktop.
 
 ![Proton2025 dark theme](docs/img/desktop-dark-en.png)
@@ -1084,7 +991,7 @@ phone as readily as from a desktop.
 - Text viewer and editor with atomic save and conflict detection
 - Permissions (chmod) and owner/group (chown) editing
 - Filename search, current directory or recursive, with result caps
-- **English and Russian**, through LuCI's normal gettext/`.lmo` pipeline
+- **English, Russian and Simplified Chinese**, through LuCI's normal gettext/`.lmo` pipeline
 - A single, mandatory path-validation layer shared by every operation,
   written to resist `../` traversal, encoded traversal, and symlink
   escape (see **Security model** below)
@@ -1177,26 +1084,24 @@ still uses a small Lua controller because LuCI's mature, well-tested
 the safest way to move large files without buffering them fully in
 RAM, and reimplementing that from scratch in ucode on top of raw
 `uhttpd` ucode CGI primitives was judged a worse safety trade for a
-first-stage deliverable. If a router's image doesn't carry
-`luci-lua-runtime`, upload/download are the only two features
-affected; `install.sh` checks for this and warns rather than failing.
+first-stage deliverable. `luci-lua-runtime` is a declared package
+dependency, so `apk`/`opkg` installs it along with everything else.
 
-### `src/` vs `runtime/`
+### Layout - a standard LuCI package
 
-There is no `src/` directory: since nothing here is compiled or
-transpiled, `runtime/` **is** the source. Duplicating it into a
-separate `src/` tree would only create drift risk between the two
-copies with no corresponding benefit - the brief allows adapting the
-suggested layout to the actual architecture, and for an interpreted,
-copy-to-target app this is that adaptation.
+The project is laid out the usual `luci-app-*` way: `root/` lands on the
+router at the same absolute paths, `htdocs/` goes under `/www`, and `po/`
+holds the translation sources that `luci.mk` compiles into
+`luci-i18n-wrtcommander-<lang>` subpackages at build time.
+There is no `src/` directory: nothing is compiled or transpiled, so the
+sources **are** what reaches the device.
 
 ## Repository layout
 
 ```
-install.sh  the installer, which is also the updater; works both as a
-            one-liner off the internet and from an unpacked copy
-runtime/    exactly what gets copied onto the router (see deploy/MANIFEST)
-deploy/     uninstall.sh / restart.sh / MANIFEST
+Makefile    package build for the OpenWrt buildroot (luci.mk)
+root/       files that land on the router at the same absolute paths
+htdocs/     LuCI static assets (land under /www)
 po/         translations: .pot template, .po sources, build/verify tooling
 tests/      on-router test suite (functional, security, upload,
             download, editor) + test filesystem generator
@@ -1205,141 +1110,66 @@ README.md   this file
 
 ## 📦 Installing on a router
 
-### ⚡ One line
+The project installs as a regular OpenWrt package - the `.apk` built by
+its `Makefile` (plus `luci-i18n-wrtcommander-*` subpackages carrying the
+translations).
 
-On the router, as root:
+### 🔨 Building
 
-```sh
-wget -q -O - https://raw.githubusercontent.com/p0sixxx/luci-app-wrtcommander/main/install.sh | sh
-```
-
-The same line updates an existing install - it is one installer either
-way; it overwrites the files and keeps your `/etc/config/wrtcommander`.
-
-Options go through `sh -s --`:
+Copy this directory into an OpenWrt tree (`package/` or a feed) and
+build it the normal way:
 
 ```sh
-# leave the package manager alone, only check the dependencies
-wget -q -O - https://raw.githubusercontent.com/p0sixxx/luci-app-wrtcommander/main/install.sh | sh -s -- --no-deps
-
-# overwrite the config too, back to the defaults
-wget -q -O - https://raw.githubusercontent.com/p0sixxx/luci-app-wrtcommander/main/install.sh | sh -s -- --force-config
+make package/luci-app-wrtcommander/compile
 ```
 
-If `wget` on the router cannot do HTTPS - which happens on trimmed-down
-images - install `ca-bundle` and `libustream-mbedtls`; the installer says
-so itself.
+The finished packages land in `bin/packages/<arch>/base/`:
+`luci-app-wrtcommander-*.apk` plus one `luci-i18n-wrtcommander-<lang>-*.apk`
+per language enabled in the image configuration (LuCI → Translations).
 
-What `install.sh` does:
+### 📥 Installing
 
-| | step |
+```sh
+# 💻 on your workstation
+scp bin/packages/*/base/luci-*wrtcommander*.apk root@ROUTER:/tmp/
+
+# 🖥 on the router - local file, no repositories needed
+apk add --allow-untrusted --no-network /tmp/luci-*wrtcommander*.apk
+```
+
+On `opkg` systems (up to 24.10) instead:
+`opkg install /tmp/luci-*wrtcommander*.ipk`.
+
+The dependencies are declared in `LUCI_DEPENDS`, so when installing from
+a repository the package manager pulls them itself; when installing a
+local file they should already be in the image (all of them ship with a
+standard LuCI build). `/etc/config/wrtcommander` is declared in
+`Package/conffiles` - your settings survive upgrades.
+
+#### Which dependencies are needed
+
+| package | why |
 |---|---|
-| 🔒 | refuses to run as anyone but root, or on anything but OpenWrt |
-| 📥 | read from a pipe, downloads the branch as an archive into `/tmp` and runs the installer from there (from an unpacked copy it installs straight away) |
-| 📦 | installs whatever dependencies are missing through `apk` (25.12+) or `opkg` (up to 24.10) - the list is below |
-| 🔍 | checks `ubus`, `rpcd`, `ucode` and LuCI are present |
-| 🧪 | parses the ucode backend and stops **before touching the live install** if it does not parse |
-| 📄 | copies every file in `deploy/MANIFEST` to its absolute path, leaving an existing `/etc/config/wrtcommander` alone unless `--force-config` is given |
-| 🗂 | keeps a copy of `MANIFEST` and `uninstall.sh` in `/usr/share/luci-app-wrtcommander`, so removal works later without the project and without a network |
-| 🔄 | reloads `rpcd` and clears the LuCI caches |
-| ✅ | checks that `luci.wrtcommander` turned up in `ubus list` |
+| `ucode` | the backend's interpreter |
+| `rpcd-mod-ucode` | the ucode plugin loader in `rpcd` |
+| `ucode-mod-fs` | the backend's file operations |
+| `ucode-mod-uci` | reading `/etc/config/wrtcommander` |
+| `ucode-mod-math` | the temporary name for the editor's atomic save |
+| `luci-lua-runtime` | the upload and download controller |
+| `luci-lib-nixio` | the controller's file operations |
+| `libubus-lua` | the controller's permission check |
 
-`uhttpd` is deliberately not restarted: the static files and the Lua
-controller are picked up on the next request.
-
-#### Which dependencies get installed
-
-Only what is missing - anything already installed is left alone, and the
-package index is refreshed only when something actually has to be
-installed.
-
-| package | why | if it cannot be installed |
-|---|---|---|
-| `ucode` | the backend's interpreter | **refuse** |
-| `rpcd-mod-ucode` | the ucode plugin loader in `rpcd` | **refuse** |
-| `ucode-mod-fs` | the backend's file operations | **refuse** |
-| `ucode-mod-uci` | reading `/etc/config/wrtcommander` | **refuse** |
-| `ucode-mod-math` | the temporary name for the editor's atomic save | **refuse** |
-| `luci-lua-runtime` | the upload and download controller | warning |
-| `luci-lib-nixio` | the controller's file operations | warning |
-| `libubus-lua` | the controller's permission check | warning |
-
-The five required ones are what the backend cannot load without. Four of
-them are already on any router with LuCI, since `luci-base` pulls them in.
+The first five are what the backend cannot load without. Four of them
+are already on any router with LuCI, since `luci-base` pulls them in.
 `ucode-mod-math` is in nothing LuCI pulls in, though, and the backend
-does not come up without it - so that is the one the installer most often
-reports.
+does not come up without it.
 
 The bottom three are only for upload and download; without them
 everything else - browsing, editing, deleting, copying, moving,
-permissions, search - works. So their absence is a warning, not a refusal.
-`libubus-lua` is listed on its own even though `luci-lua-runtime` brings
-it: without it the controller's permission check fails closed and uploads
-would quietly get a 403, which is better said at install time.
-
-Not installed, only checked: LuCI itself, `rpcd`, `ubus` and `uhttpd`. If
-those are missing this is not a router a LuCI app gets installed on, and
-the installer says so plainly.
-
-There is a second check that does not depend on the package manager: the
-installer runs the backend, and if it cannot load a ucode module the error
-names the package rather than passing itself off as a parse error. That
-covers `--no-deps` and images with no `apk`/`opkg` at all.
-
-### 🧰 Option A — the script from a copy of the project
-
-For a router with no internet, or while working on the code:
-
-**💻 On your machine**
-
-```sh
-scp -r install.sh runtime deploy root@ROUTER:/tmp/wrtcommander/
-ssh root@ROUTER
-```
-
-**🖥 On the router**
-
-```sh
-sh /tmp/wrtcommander/install.sh
-```
-
-The same installer and the same table above; it just downloads nothing.
-
-### 🛠 Option B — by hand over scp
-
-**🖥 On the router, first** (the directory is new, or `scp` will fail):
-
-```sh
-mkdir -p /www/luci-static/resources/wrtcommander
-```
-
-**💻 On your workstation**, from `runtime/`:
-
-```sh
-cd runtime
-scp etc/config/wrtcommander                                 root@ROUTER:/etc/config/wrtcommander
-scp usr/share/rpcd/ucode/wrtcommander.uc                    root@ROUTER:/usr/share/rpcd/ucode/wrtcommander.uc
-scp usr/share/rpcd/acl.d/luci-app-wrtcommander.json         root@ROUTER:/usr/share/rpcd/acl.d/luci-app-wrtcommander.json
-scp usr/share/luci/menu.d/luci-app-wrtcommander.json        root@ROUTER:/usr/share/luci/menu.d/luci-app-wrtcommander.json
-scp usr/lib/lua/luci/controller/wrtcommander.lua            root@ROUTER:/usr/lib/lua/luci/controller/wrtcommander.lua
-scp usr/lib/lua/luci/i18n/wrtcommander.ru.lmo               root@ROUTER:/usr/lib/lua/luci/i18n/wrtcommander.ru.lmo
-scp www/luci-static/resources/view/wrtcommander.js          root@ROUTER:/www/luci-static/resources/view/wrtcommander.js
-scp www/luci-static/resources/wrtcommander/wrtcommander.css root@ROUTER:/www/luci-static/resources/wrtcommander/wrtcommander.css
-```
-
-Or in one go:
-
-```sh
-cd runtime && tar cf - . | ssh root@ROUTER "mkdir -p /www/luci-static/resources/wrtcommander && tar xf - -C /"
-```
-
-**🖥 On the router, afterwards** 🔄
-
-```sh
-rm -f /tmp/luci-indexcache* /tmp/luci-modulecache/*
-/etc/init.d/rpcd restart
-/etc/init.d/uhttpd restart
-```
+permissions, search - works. They are declared as straight dependencies
+on purpose: `libubus-lua` comes with `luci-lua-runtime` anyway, and
+without it the controller's permission check fails closed and uploads
+would quietly get a 403.
 
 ### ✅ Checking it took
 
@@ -1358,40 +1188,36 @@ Then **Ctrl+Shift+R** in the browser and **LuCI → Services → Wrt Commander**
 
 ### Re-deploying after a change
 
-Edit files under `runtime/`, `scp` the changed one(s) over, then:
+Edit files under `root/`/`htdocs/`, `scp` the changed one(s) to the same
+absolute paths, then on the router:
 
 ```sh
-sh /tmp/wrtcommander/deploy/restart.sh
+ucode /usr/share/rpcd/ucode/wrtcommander.uc    # does the backend parse?
+rm -f /tmp/luci-indexcache* /tmp/luci-modulecache/*
+/etc/init.d/rpcd reload
 ```
 
-This re-validates the ucode syntax, reloads `rpcd`, and clears the
-index cache - the fast inner loop for iterating on the app.
-
-To simply pull the current version from the repository, run the one-line
-install again: that is the update.
+That is the fast inner loop for iterating on the app. To update the
+whole install, just build and install the new `.apk` - the package
+manager replaces the files and your config survives.
 
 ### Uninstalling
 
 ```sh
-sh /usr/share/luci-app-wrtcommander/uninstall.sh           # keeps your config
-sh /usr/share/luci-app-wrtcommander/uninstall.sh --purge    # also removes it
+apk del luci-app-wrtcommander luci-i18n-wrtcommander-zh-cn
 ```
 
-That path always works, including after the one-line install: the
-installer leaves `uninstall.sh` there next to `MANIFEST` on purpose. From
-an unpacked copy of the project it is the same thing - `sh
-deploy/uninstall.sh`.
-
-`uninstall.sh` only ever touches the exact absolute paths listed in
-`deploy/MANIFEST` (eight fixed files) - it never does a wildcard or
-recursive delete, so it cannot reach into user data or unrelated
-OpenWrt files by construction.
+The package's `postinst`/`prerm` reload `rpcd` and clear the LuCI caches.
+`/etc/config/wrtcommander` is a conffile: a modified config survives
+removal; delete the file by hand for a full wipe.
 
 ## Testing
 
+Copy `tests/` onto the router and run it there:
+
 ```sh
-cd /tmp/wrtcommander/tests
-sh run-all.sh
+scp -r tests root@ROUTER:/tmp/wrtcommander-tests/
+ssh root@ROUTER 'cd /tmp/wrtcommander-tests && sh run-all.sh'
 ```
 
 This builds a disposable test tree at `/tmp/wrtcommander-test/`
@@ -1584,7 +1410,7 @@ only reflects whatever `list`/`stat` tell it.
 ```sh
 uci set wrtcommander.main.debug='1'
 uci commit wrtcommander
-sh deploy/restart.sh
+/etc/init.d/rpcd reload
 tail -f /tmp/wrtcommander-debug.log
 ```
 
@@ -1968,7 +1794,8 @@ Commander conventions worth knowing:
 
 ## Languages
 
-The interface is fully translated into **English and Russian** using
+The interface is fully translated into **English, Russian and
+Simplified Chinese** using
 LuCI's standard gettext pipeline, so it follows whatever language LuCI
 itself is set to:
 
@@ -1980,11 +1807,10 @@ uci commit luci
 or **System → System → Language**. With `lang=auto` LuCI follows the
 browser's `Accept-Language`.
 
-The compiled catalog installs to
-`/usr/lib/lua/luci/i18n/wrtcommander.ru.lmo`. Note that this translates
-*Wrt Commander*; for the surrounding LuCI chrome to be Russian too you
-need LuCI's own catalog (`luci-i18n-base-ru`) — `install.sh` warns if
-it is missing.
+The compiled catalog is installed by the `luci-i18n-wrtcommander-<lang>`
+subpackages to `/usr/lib/lua/luci/i18n/wrtcommander.<lang>.lmo`. Note that
+it translates *Wrt Commander* only; for the surrounding LuCI chrome you
+need LuCI's own catalog (`luci-i18n-base-ru`, `luci-i18n-base-zh-cn`, ...).
 
 The **menu entry goes through the catalog too**, though it resolves to
 "Wrt Commander" in every language: the product name is a name, not a
@@ -2007,7 +1833,8 @@ titles without a context.
 
 Sources, tooling and instructions for adding a language live in
 [`po/README.md`](po/README.md). Russian uses proper three-form plurals
-(`1 объект / 2 объекта / 5 объектов`) via `N_()`.
+(`1 объект / 2 объекта / 5 объектов`) via `N_()`; Simplified Chinese
+uses a single plural form (`nplurals=1`).
 
 ## Known limitations (first stage)
 
@@ -2044,30 +1871,760 @@ Sources, tooling and instructions for adding a language live in
   find/reload/caret-browsing while the file list has focus - but every
   F-key action is also a clickable button, so nothing depends on the
   browser cooperating.
-- **Translations are shipped pre-compiled.** `.lmo` is a binary format
-  built by LuCI's `po2lmo`; editing a `.po` here has no effect until the
-  catalog is rebuilt (see `po/README.md`).
+- **Translations are compiled at package build time.** `.lmo` is a binary
+  format `luci.mk` produces from `po/` via `po2lmo`; editing a `.po` here
+  has no effect until the package is rebuilt (see `po/README.md`).
 - Not yet exercised on real OpenWrt 25.12.x hardware in this session -
-  see **Testing** and **Next step** below.
+  see **Testing** and **Building as a real OpenWrt package** below.
 
-## Next step: turning this into a real OpenWrt package
+## Building as a real OpenWrt package
 
-1. Write a `Makefile` per `runtime/` file's final destination (this
-   maps almost one-to-one onto `deploy/MANIFEST`, which was written
-   with exactly this reuse in mind).
-2. Declare real `DEPENDS` (`rpcd`, `rpcd-mod-ucode`, `ucode`, `uhttpd`,
-   `luci-base`, `luci-lua-runtime`).
-3. Move `/etc/config/wrtcommander` under `define Package/conffiles` so
-   opkg treats it as user configuration across upgrades.
-4. Add `postinst`/`prerm` scripts that do what `install.sh`/
-   `uninstall.sh` already do (reload `rpcd`, clear the index cache),
-   minus the manual-copy-specific bits.
-5. Drop the committed `.lmo` and let the build produce it instead:
-   including `$(TOPDIR)/feeds/luci/luci.mk` makes `luci.mk` compile
-   `po/<lang>/*.po` and emit `luci-i18n-wrtcommander-<lang>` subpackages
-   automatically, which is the normal way translations ship. The
-   `po/` layout here already matches what `luci.mk` expects, so this
-   step should be a deletion rather than a rewrite.
-6. Build and test the `.ipk` with the OpenWrt SDK, then run this same
-   `tests/` suite against a router that installed it via `opkg`
-   instead of `scp`.
+The root `Makefile` follows the `luci.mk` layout (`root/` → `/`,
+`htdocs/` → `/www`, `po/<lang>/` → `luci-i18n-wrtcommander-<lang>`
+subpackages), so this directory can be copied into `package/` or a feed
+and built with a normal `make package/luci-app-wrtcommander/compile`.
+`/etc/config/wrtcommander` is declared in `Package/conffiles`, and
+`postinst`/`prerm` reload `rpcd` and clear the LuCI index cache.
+
+---
+
+# Wrt Commander （简体中文）
+
+[Русский](#wrt-commander) · [English](#wrt-commander-english) · **简体中文**
+
+**Wrt Commander** 是 OpenWrt LuCI 的双面板文件管理器，为路由器管理者设计。布局采用 Norton、Midnight、Total Commander 确立的经典范式：两个独立的目录面板并排显示，其一为活动面板，所有操作默认「从活动面板到对面板」。完整的文件操作集，键盘与鼠标皆可驱动，界面支持英文、俄文与简体中文，明暗双主题，手机与桌面同样好用。
+
+![Proton2025 暗色主题](docs/img/desktop-dark-en.png)
+
+![Proton2025 亮色主题](docs/img/desktop-light-en.png)
+
+<p align="center">
+  <img src="docs/img/mobile-dark-en.png"  width="300" alt="手机上的暗色主题">
+  <img src="docs/img/mobile-light-en.png" width="300" alt="手机上的亮色主题">
+</p>
+
+- 两个面板各自独立维护路径、排序和选中集；**Tab** 切换，活动面板有边框标识
+- **F5 复制 / F6 移动默认以对面板的目录为目标**——双面板的意义所在
+- 完整的键盘控制：方向键、PageUp/Down、Home/End、Enter 打开、
+  Backspace 返回上级、Insert/Space 标记、Ctrl+A、Ctrl+R
+- 每个动作在顶栏都有图标按钮，不依赖键盘
+- 目录或文件单击/单击触屏即打开；设置里一个开关即可恢复双击
+- 每个面板都有状态栏：条目数、选中大小、该文件系统的剩余空间
+- 新建 / 重命名 / 删除 / 复制 / 移动，单个或多个条目皆可
+- HTTP 流式上传下载（绝不走 base64-over-JSON）
+- 整个目录上传，含嵌套结构：电脑上直接选目录，手机上走 ZIP
+- 文本查看器与编辑器，原子保存 + 冲突检测
+- 权限位（chmod）与属主/属组（chown）编辑
+- 按文件名搜索，当前目录或递归，有结果上限
+- **英文、俄文与简体中文**，走 LuCI 标准的 gettext/`.lmo` 流水线
+- 所有操作共享同一层强制路径校验，可抵御 `../` 遍历、编码绕过和
+  符号链接逃逸（见下文**安全模型**）
+
+手机上两块面板放不下，因此 900px 以下应用每次只显示一个面板并给出
+切换器。面板*模型*不变，所以「复制到对面板」的含义与桌面完全一致。
+
+## 环境要求
+
+- OpenWrt 25.12.x（23.05/24.10 上理论也可用——这里用到的
+  ubus/rpcd/ucode API 在这些版本间保持稳定）
+- LuCI（基于 JS 的视图，即任何现行 LuCI）
+- `rpcd` + `rpcd-mod-ucode`（提供 `/usr/share/rpcd/ucode` 插件加载器）
+- `ucode` 及其模块 `ucode-mod-fs`、`ucode-mod-uci`、`ucode-mod-math`
+- `uhttpd`
+- `luci-lua-runtime`——**仅**上传/下载需要（见下文）；其余功能
+  （浏览、编辑、删除、复制、移动、权限、搜索）没有它也能工作
+
+运行标准 LuCI 的路由器上，以上大部分都已就位——`luci-base` 本身就
+会拉入 `rpcd-mod-ucode`、`ucode`、`ucode-mod-fs` 和 `ucode-mod-uci`。
+例外是 `ucode-mod-math`，LuCI 里没有任何东西依赖它。缺失的依赖由
+软件包管理器自动补齐，见「需要哪些依赖」。
+
+## 架构
+
+```
+LuCI JS 视图 (www/luci-static/resources/view/wrtcommander.js)
+        |
+        |-- ubus/rpcd  ------------------->  usr/share/rpcd/ucode/wrtcommander.uc
+        |     (list, stat, read, write,        "luci.wrtcommander" ubus 对象
+        |      mkdir, create, rename,           —— 每个方法在碰文件系统之前
+        |      remove, copy, move, chmod,         都先过 canon()（见下文）
+        |      chown, search, disk_info,
+        |      dirsize)
+        |
+        `-- 普通 HTTP  -------------------->  usr/lib/lua/luci/controller/wrtcommander.lua
+              (GET .../download?path=...        仅用于流式上传/下载——
+               POST .../upload?dest=...)         超大文件绝不走 JSON/ubus
+```
+
+凡是可以走 ubus 的都走了 ubus。上传和下载是刻意的例外：JSON-RPC 没有
+流式传输，也有实际的消息大小上限，因此这两个操作改用普通 HTTP 对接
+一个小型 Lua 控制器。该控制器重新实现了与 ucode 后端相同的路径规范
+化校验管线（Lua 文件里的 `canon_path()` 与 ucode 文件里的 `canon()`
+互为镜像）——为什么这一份逻辑存在两份、以及它对将来改动意味着什么，
+见**已知限制**。
+
+`luci.http` 在这里有一个坑，曾造成两个 bug。文件处理回调有两种调用
+方式：在请求体被解析**之前**安装，则走流式，`meta` 只在每个分片开始
+时到达一次；如果请求体已被解析，LuCI 会重放缓冲的上传并在**每个**
+分块都传入 `meta`（`luci-base/ucode/http.uc` 的 `setfilehandler()`）。
+控制器此前在安装回调前用普通 `formvalue()` 读取 `dest`，导致请求体被
+过早解析，回调把每个 `meta` 都当成新分片——以 "wb" 重新打开目标文件并
+截断。于是最后一次空调用留下一个 0 字节文件，而第二个分块看到第一
+个分块刚创建的文件，对一个上传前并不存在的名字报「已存在」。现在参数
+改用 `formvalue(name, true)` 读取——它们已从查询字符串解码过，请求体
+保持原样——每个分片恰好打开一次。由 `tests/upload-handler-tests.sh`
+覆盖，该测试以两种模式驱动处理器，且不需要路由器。
+
+> **移动菜单项也会移动这些端点。** 本应用位于
+> `admin/services/wrtcommander`，上传/下载 URL 是
+> `admin/services/wrtcommander/upload` 和 `…/download`。这条路径写在
+> 四个地方——`menu.d/luci-app-wrtcommander.json`、Lua 控制器里的
+> `entry()` 调用、JS 视图里的 `L.url(…)` 调用、以及两个 HTTP 测试脚本。
+> 只改一处，文件传输会静默坏掉（界面照常工作，只是上传 404），所以四处
+> 必须一起改。
+
+### 为什么后端用 ucode，Lua 只负责流式传输
+
+OpenWrt/LuCI 正在把所有服务端代码从 Lua 迁向 ucode + rpcd。这里的文件
+系统后端完全用 ucode 编写，跑在 `rpcd-mod-ucode` 上（全程没有对
+用户可控字符串的 shell 调用——它唯一运行的外部进程 `df` 也是通过
+`fs.popen()` 的数组形式调用的，即字面 argv 的 `execvp()`，从不经过
+`/bin/sh -c`）。流式 HTTP 上传/下载仍使用一个小型 Lua 控制器，因为
+LuCI 成熟且久经考验的 `luci.http` multipart 解析器和
+`setfilehandler()` 流式 API 是不把大文件整个缓冲进内存的最安全搬运
+方式，而在 `uhttpd` 的裸 ucode CGI 原语上从零重写一遍，被认为对本阶段
+而言是更差的安全权衡。`luci-lua-runtime` 已声明为包依赖，`apk`/`opkg`
+会随其他依赖一起安装它。
+
+### 布局——标准 LuCI 包
+
+项目按 `luci-app-*` 的常规布局组织：`root/` 按相同绝对路径落到路由器上，
+`htdocs/` 落到 `/www` 之下，`po/` 存放翻译源文件，`luci.mk` 在构建时将其
+编译为 `luci-i18n-wrtcommander-<lang>` 子包。没有 `src/` 目录：没有任何
+东西需要编译或转译，源码**就是**到达设备的内容。
+
+## 仓库结构
+
+```
+Makefile    OpenWrt buildroot 包构建（luci.mk）
+root/       按相同绝对路径落到路由器上的文件
+htdocs/     LuCI 静态资源（落到 /www 之下）
+po/         翻译：.pot 模板、.po 源文件、构建/校验工具
+tests/      路由器端测试集（功能、安全、上传、下载、编辑器）
+            + 测试文件系统生成器
+README.md   本文件
+```
+
+## 📦 安装到路由器
+
+本项目以普通 OpenWrt 软件包形式安装——由 `Makefile` 构建出的 `.apk`
+（以及携带翻译的 `luci-i18n-wrtcommander-*` 子包）。
+
+### 🔨 构建
+
+把本目录复制进 OpenWrt 源码树（`package/` 或某个 feed），按常规方式构建：
+
+```sh
+make package/luci-app-wrtcommander/compile
+```
+
+产物位于 `bin/packages/<arch>/base/`：`luci-app-wrtcommander-*.apk`，以及
+镜像配置中每个启用的语言（LuCI → Translations）各一个
+`luci-i18n-wrtcommander-<lang>-*.apk`。
+
+### 📥 安装
+
+```sh
+# 💻 工作站上
+scp bin/packages/*/base/luci-*wrtcommander*.apk root@ROUTER:/tmp/
+
+# 🖥 路由器上——本地文件，无需访问软件仓库
+apk add --allow-untrusted --no-network /tmp/luci-*wrtcommander*.apk
+```
+
+`opkg` 系统（24.10 及更早）则用：
+`opkg install /tmp/luci-*wrtcommander*.ipk`。
+
+依赖已声明在 `LUCI_DEPENDS` 中：从软件仓库安装时包管理器会自动拉取；
+安装本地文件时这些依赖应已存在于镜像中（标准 LuCI 构建全部自带）。
+`/etc/config/wrtcommander` 已声明进 `Package/conffiles`——升级时配置
+会被保留。
+
+#### 需要哪些依赖
+
+| 软件包 | 用途 |
+|---|---|
+| `ucode` | 后端解释器 |
+| `rpcd-mod-ucode` | `rpcd` 中的 ucode 插件加载器 |
+| `ucode-mod-fs` | 后端的文件操作 |
+| `ucode-mod-uci` | 读取 `/etc/config/wrtcommander` |
+| `ucode-mod-math` | 编辑器原子保存用的临时文件名 |
+| `luci-lua-runtime` | 上传/下载控制器 |
+| `luci-lib-nixio` | 控制器的文件操作 |
+| `libubus-lua` | 控制器的权限检查 |
+
+前五个缺一个后端就根本起不来。其中四个在任何装了 LuCI 的路由器上都已
+存在，因为 `luci-base` 会拉入它们；唯独 `ucode-mod-math` 不在 LuCI 的任何
+依赖链上，没有它后端起不来。
+
+后三个只服务于上传和下载；没有它们，其余功能——浏览、编辑、删除、复制、
+移动、权限、搜索——全部正常。它们被刻意声明为直接依赖：`libubus-lua`
+反正会被 `luci-lua-runtime` 拉入，而少了它控制器的权限检查会彻底关闭，
+上传会静默地吃到 403。
+
+### ✅ 验证安装
+
+```sh
+ubus list | grep wrtcommander        # 应出现 luci.wrtcommander
+ubus call luci.wrtcommander list '{"path":"/etc/config"}' | head
+```
+
+如果对象没出现，看看后端解析怎么说：
+
+```sh
+ucode /usr/share/rpcd/ucode/wrtcommander.uc
+```
+
+然后浏览器里 **Ctrl+Shift+R**，打开 **LuCI → 服务 → Wrt Commander**。
+
+### 改动后的重新部署
+
+编辑 `root/`/`htdocs/` 下的文件，用 `scp` 把改动的文件推到相同绝对路径，
+然后在路由器上：
+
+```sh
+ucode /usr/share/rpcd/ucode/wrtcommander.uc    # 后端能解析吗？
+rm -f /tmp/luci-indexcache* /tmp/luci-modulecache/*
+/etc/init.d/rpcd reload
+```
+
+这就是迭代本应用的快速内循环。要整体更新，直接构建并安装新的 `.apk`
+即可——包管理器会替换文件，配置保留。
+
+### 卸载
+
+```sh
+apk del luci-app-wrtcommander luci-i18n-wrtcommander-zh-cn
+```
+
+软件包的 `postinst`/`prerm` 会重载 `rpcd` 并清理 LuCI 缓存。
+`/etc/config/wrtcommander` 是 conffile：改过的配置在卸载时保留，要彻底
+清除请手动删除该文件。
+
+## 测试
+
+把 `tests/` 复制到路由器上执行：
+
+```sh
+scp -r tests root@ROUTER:/tmp/wrtcommander-tests/
+ssh root@ROUTER 'cd /tmp/wrtcommander-tests && sh run-all.sh'
+```
+
+脚本会在 `/tmp/wrtcommander-test/` 构建一棵一次性测试树（Unicode 名字、
+空格、隐藏文件、一个大文件、符号链接——包括一个故意做坏的），然后按顺序
+运行：
+
+- `fs-tests.sh` —— create、mkdir、list、stat、read、write、rename、
+  copy、move、delete、chmod、search、disk_info；Unicode、空格、隐藏文件、
+  长文件名、符号链接
+- `ui-click-tests.sh` —— 行交互行为：真实的视图模块按 LuCI 加载器的方
+  式被加载进无头浏览器再点按。单击打开一行，多余的第二次点按不会重复
+  打开，Ctrl+单击是标记而非打开，取消该设置则恢复双击。目录上传也在其
+  中：目录按由浅到深创建，每个文件单独一次请求进入自己的目录，`..`
+  片段被丢弃而不是发送，「应用到其余」让问题不再逐文件重复。另外还有
+  ZIP 路径：用 `zipfile` 构建的真实压缩包，`stored` 与 `deflate` 条目、
+  UTF-8 标记名与 CP437 名、独立条目的空目录、名字里带 `..` 的条目，以及
+  确认之前不写入任何内容。需要 node 和 playwright，所以在路由器上跳过
+- `canon-path-tests.sh` —— 路径校验层：`canon()` 和 `detect_binary()`
+  直接从后端代码中提取并调用，测试不可能偏离它守护的实现。带空格、括号
+  和西里尔字母的普通名字必须放行；空字符串、非字符串、相对路径和路径中
+  嵌入的 NUL 字节必须拒绝，各自带独立消息。不需要 ubus，也不需要路由器
+- `dirsize-tests.sh` —— 目录大小：对已知大小的树求和；符号链接不解析
+  （包括指向自身父级的）；条目数与深度上限；拒绝普通文件；拒绝穿越路径
+- `security-tests.sh` —— 临时把 `allowed_root` 限制到测试树，然后断言
+  `../`、`../../`、绝对路径逃逸、字面 `%2e%2e` / `%252e%252e`（证明不
+  存在双重解码）、反斜杠序列、直接/嵌套符号链接逃逸在*每个*写操作方法上
+  都被拒绝，而不只是 `list`/`stat`；退出时恢复原始 `allowed_root`，哪怕
+  测试失败
+- `editor-tests.sh` —— 空文件、UTF-8/俄文文本、JSON、UCI 风格配置、超
+  大文件拒绝、外部修改冲突检测、以及 `/rom`（overlay 只读层）上的读写行为
+- `upload-tests.sh` / `download-tests.sh`（需要 `curl`）——空文件、小文件、
+  Unicode 名、带空格名与大文件（数 MiB、流式）；覆盖保护；拒绝写入 `/rom`；
+  不存在路径返回 404；经符号链接下载；拒绝下载目录
+
+每个阶段逐条打印 `PASS`/`FAIL` 并给出总计数；任何失败都会让
+`run-all.sh` 以非零退出码结束。
+
+有两类情形被刻意**不**模拟，理由写在脚本里：字面 NUL 字节注入（`ubus
+call` 的参数是 C 字符串，CLI 上根本塞不进 NUL；后端仍然防御来自裸
+ubus/JSON-RPC 客户端的 NUL）和经典的属主/属组「permission denied」
+（rpcd 以 root 运行，按定义绕过 Unix 权限位——对这种特权级全文件系统
+工具而言，对 `/rom` 的只读文件系统场景才是现实的「拒绝写入」）。
+
+## 后端 API（ubus 对象 `luci.wrtcommander`）
+
+| 方法 | 用途 |
+|---|---|
+| `list` | 目录内容（名称、类型、大小、mtime、权限位、属主、属组、链接目标） |
+| `stat` | 单路径的完整元数据，外加挂载/文件系统信息 |
+| `read` | 文件预览/编辑/头部/尾部读取，base64，有大小上限 |
+| `write` | 原子保存（临时文件 + rename），带 mtime/大小冲突检查 |
+| `mkdir` / `create` | 新建目录 / 新建空文件 |
+| `rename` | 同目录内重命名 |
+| `remove` | 递归删除，单个或多个路径，逐条返回结果 |
+| `copy` / `move` | 递归，单个或多个；`move` 尽量用 `rename()`，跨文件系统时退化为复制+删除 |
+| `chmod` / `chown` | 权限位 / 属主修改 |
+| `search` | 按文件名搜索，当前目录或递归，受深度/扫描数/结果数限制 |
+| `disk_info` | 某路径所在文件系统的可用/已用/总量，走 `df`（绝不用递归 `du`） |
+| `dirsize` | 按需计算目录大小：对整棵子树求和，有上限（见**目录大小**） |
+
+每个响应要么是 `{"ok": true, ...}`，要么是 `{"ok": false, "error":
+{"code": "EACCES", "message": "..."}}`；`remove`/`copy`/`move` 总是返回
+顶层 `ok: true` 信封加 `results: [...]` 数组携带逐条结果，因为批量操作
+可以部分成功。
+
+## ACL
+
+`usr/share/rpcd/acl.d/luci-app-wrtcommander.json` 定义了独立的作用域——
+`luci-app-wrtcommander-read`、`-write`、`-delete`、`-chmod`、`-chown`——
+以及 `luci-app-wrtcommander`，后者是菜单项和全权限管理会话所需的。
+root/admin 的 LuCI 会话自动获得全部作用域（OpenWrt 默认 `root` 登录授予
+`read '*'` / `write '*'`）；受限的非 root LuCI 用户只得到你在
+`/etc/config/rpcd` 中显式分配的部分。上传和下载由 Lua 控制器自己在触碰
+文件系统之前把关：询问 rpcd 当前会话是否有 `ubus`/`luci.wrtcommander`/
+`list`（读）或 `write` 权限——绝不靠藏按钮。
+
+## 安全模型
+
+```
+LuCI JS 视图
+     |
+     v
+ubus / HTTP           <- 不可信输入从这里进入
+     |
+     v
+ACL 检查              （rpcd，或 Lua 控制器中的 session_has_access()）
+     |
+     v
+canon()               唯一的路径校验层：
+     |                    规范化（按词法解析 "." 和 ".."，
+     |                     绝不触碰文件系统）
+     |                   -> 对照 allowed_root 做包含性检查
+     |                   -> 对已存在部分用 realpath() 解析符号链接
+     |                   -> 对解析后的路径再做一次包含性检查
+     v
+POSIX 文件系统调用    （ucode fs 模块 / Lua io+nixio —— 绝不走 shell）
+```
+
+`wrtcommander.uc` 中没有任何触及文件系统的方法、`wrtcommander.lua` 中
+没有任何 HTTP 动作，会操作未经过这个函数返回的路径。`security-tests.sh`
+具体覆盖的内容：
+
+- `../`、`../../`、更深的 `../../../` 遍历
+- 绝对路径逃逸（`allowed_root` 被限制在某棵子树时访问 `/etc/passwd`）
+- 字面 `%2e%2e` 和双重编码的 `%252e%252e` 被当作普通（不存在）文件名，
+  证明后端没有可被双重编码利用的自有解码环节
+- 反斜杠序列（Linux 上不是路径分隔符，只是文件名的一部分）
+- 位于允许根内却指向其外的符号链接（直接的，以及嵌套一层目录的）
+- 同样的包含性检查施加于每个写操作方法（`write`、`remove`、`mkdir`、
+  `chmod`……），不只是 `list`/`stat`
+- 直接拒绝删除/重命名允许根本身
+
+还有一个坑值得记录，因为它是静默的，且会破坏安全检查本身：在 ucode 里
+**正则字面量无法匹配 NUL 字节**。`/\x00/` 编译出的模式匹配空字符串，
+所以 `match(anything, /\x00/)` 对任何字符串都为真。这样写出的 NUL 检查
+拒绝的不是可疑路径而是*全部*路径，并以「Invalid path」的形式出现在
+`_normal (1).jpg` 这种完全普通的名字上。同样的写法也出现在
+`detect_binary()` 里，曾把每个文件都报为二进制。正确的原语是
+`index(str, chr(0)) >= 0`，返回字节偏移或 `-1`。`canon()` 开头的三处
+拒绝现在携带不同的消息（"Path is not a string"、"Path is empty"、
+"Path contains a NUL byte"），让到达界面的拒绝能指明触发的规则。
+`tests/canon-path-tests.sh` 通过把两个函数直接从后端提取出来覆盖这一
+点：旧写法在 14 条断言上失败，现在的写法全部通过。
+
+其他刻意的设计：上传下载从不把整个文件缓冲进内存（全程固定 64 KiB 分块）；
+`read()` 在服务端强制 `preview_max_size`/`editor_max_size`，不管客户端
+声称什么；`search()` 受最大深度、最大扫描目录数和最大结果数约束，一次
+查询永远不会变成无界的 `find /`；特殊文件（设备节点、FIFO、套接字）绝不
+被静默「复制」——复制它们是硬性的显式错误，而不是产出损坏或误导性的
+副本；`disk_info` 用 `df`，绝不用递归 `du`；目录列表从不计算递归目录
+大小。
+
+## 配置（`/etc/config/wrtcommander`）
+
+```
+config wrtcommander 'main'
+	option enabled '1'
+	option allowed_root '/'
+	option show_hidden '1'
+	option preview_max_size '524288'    # 512 KiB
+	option editor_max_size '1048576'    # 1 MiB
+	option search_max_results '500'
+	option search_max_depth '12'
+	option search_max_scanned '20000'
+	option dirsize_max_entries '50000'
+	option dirsize_max_depth '24'
+	option debug '0'
+```
+
+`allowed_root` 每次调用都重新读取，所以后端在架构上已经准备好将来
+「限制到 `/mnt/storage`」这类部署——前端从不执行、甚至不知道这条策略，
+它只反映 `list`/`stat` 所报告的内容。
+
+### 调试模式
+
+```sh
+uci set wrtcommander.main.debug='1'
+uci commit wrtcommander
+/etc/init.d/rpcd reload
+tail -f /tmp/wrtcommander-debug.log
+```
+
+每行记录方法、路径、耗时和成功/失败——**绝不**记录文件内容、凭据或
+请求体。
+
+## 界面说明
+
+JS 视图（`wrtcommander.js`）只用 LuCI 自带框架（`ui`、`dom`、`rpc`、
+`E()`）、Unicode 字形做图标加上一对手绘的 inline SVG 路径（不引图标库），
+以及配套样式表（`wrtcommander.css`）。
+
+布局自上而下：一行顶栏，然后是两块面板。
+
+顶栏先是应用名，然后所有动作以图标按钮排开——功能键（F3 查看、F4 编辑、
+F5 复制、F6 移动、F7 新建目录、F2 重命名、F8 删除）图标旁印着对应键名，
+然后是无功能键的动作（新建文件、上传、下载、搜索），最后推到右侧的是
+选中计数和两个页面级按钮（键盘快捷键、设置）。每个按钮都带 `title` 和
+`aria-label` 的完整措辞，图标对悬停和屏幕阅读器都有标注。
+
+字形是按按钮尺寸把每个动作的候选渲染出来逐一比较选定的，而不是按码位
+名字挑的。两个值得记录的结论：眼睛图标需要 `U+FE0F` 变体选择符才能保住
+颜色，而键盘图标（`U+2328`）则*不能*带它，否则会渲染得发白发虚——所以
+键盘快捷键按钮最终与上传/下载一样改为绘制 SVG，描边粗细和配色完全一致。
+
+上传和下载是例外，也是唯一必须读起来像一对的两个——同一个托盘加镜像
+箭头。没有 emoji 对能做到：发件/收件托盘（`U+1F4E4`/`U+1F4E5`）只差一支
+小箭头的方向，并排看像同一个图标出现两次；方框箭头（`U+2B06`/`U+2B07`）
+倒是成对，却是一排象形图标里仅有的两个平面方块。所以这两个是画出来的，
+由视图里的 `strokeIcon()` 完成——inline SVG，无图标库，共享一条托盘路径
+加镜像箭头。描边用 `currentColor`，箭头用 `--fx-accent`，两个主题无需第
+二套配色。SVG 在 `.fx-act-ico`（本身已是 `1.35em`）*内部*按 `1em` 定尺寸：
+在那里再用 `em` 会让两层相乘，导致这两个按钮比同行其他按钮高。
+图标外框是固定的正方形，所以整排按钮宽度一致。分隔符把三段动作分组。
+900px 以下该行改为网格而不是折行——见**在手机上**。
+
+选中计数只在真的有标记时出现——它数的是被标记的条目，而不是光标恰好
+所在的那一行。
+
+### 对话框
+
+**键盘快捷键**是一个只有内容那么宽、在对话框中居中的双列网格：按键在
+中间分隔线右侧对齐，说明文字紧随其后，按 导航 / 选择 / 文件操作 分组。
+它取代了原先那个按键列占 40% 的全宽表格——旧设计让每个按键和它的作用
+之间隔着一条空白带。
+
+**设置**刻意保持短——设置对话框是选项最容易堆积的地方。它只收纳改变
+列表呈现方式或面板起始位置的选项，每项一个开关：显示隐藏文件、文件夹
+优先、记住面板路径、重置列宽、编辑器长行折行。属于单个文件的东西
+（比如权限）放在那个文件自己身上。
+
+关于这些界面的渲染位置要说明一点：LuCI 的模态框追加到 `<body>`，右键
+菜单也一样。因此两者都在 `.fx-app` **之外**，而 `--fx-*` 令牌原先恰好
+声明在那里——于是一个都解析不了。修复前实测：键帽无边框无背景、分节线
+宽 0px、弱化提示以全对比度渲染、右键菜单无边框直角。令牌块现在也声明在
+`:root` 上，`.fx-app` 和 `.fx-ctx` 再各重复一份，这样把自有 `--proton-*`
+限定在 `:root` 之下的主题也能在局部被接上。
+
+### 主题适配
+
+样式表针对
+[Proton2025](https://github.com/ChesterGoodiny/luci-theme-proton2025)
+主题的 CSS 自定义属性编写——`--proton-bg-tertiary`、`--proton-accent`、
+`--proton-radius`、`--proton-shadow-sm` 等等——每个都带一条以中性灰收尾的
+回退链。在该主题下应用继承其精确的表面色、强调色、圆角和阴影，并免费跟随
+它的亮色模式，因为那里的亮色模式只是重新赋值同一组变量。在任何其他主题上，
+回退链保证可读性。没有任何地方硬编码一套配色。kucat 主题下有一处已知适配：
+它给裸 `input` 施加 `margin: .2em auto`，会把 flex 行里的复选框推到行中央——
+`.fx-set-row` 的复选框规则因此清零了横向外边距。
+
+**随窗口定尺寸。** 两列文件列表比设置表单更想要空间，所以视图按窗口实际
+尺寸取，分两个独立步骤。
+
+*高度*被拉伸到让面板够到窗口底，而不是去猜主题页头页脚的固定高度。
+
+*宽度*通过 `.fx-wide` 类放宽主题自身内容容器（`#maincontent`）的
+max-width，且仅在本页打开期间生效。应用自身从不被移动或改尺寸——容器
+保持它自己的居中、内边距和任何侧栏偏移——`widenContainer()` 加上这个类、
+测量一次，如果容器右缘不再落在窗口内就立刻摘掉它。
+
+目标值是 `max(var(--proton-page-max-width, 990px), calc(100vw - 2em))`：
+跟随窗口宽度，只留一道窄边距，且永不低于主题自身的上限，所以在小屏幕上
+它只能增加空间、绝不减少。在 Proton2025 上实测：
+
+| 视口 | 修改前 | 修改后 |
+|---------:|-------:|------:|
+| 1920 | 990 | 1888 |
+| 1600 | 990 | 1568 |
+| 1366 | 990 | 1334 |
+| 1280 | 990 | 1248 |
+| 1024 | 990 | 990 |
+
+回退检查不是摆设。在 Proton2025 上 `#maincontent` 是个会撑进上限所拦住的
+空间的 flex 项，抬高上限直接有效；而经典侧栏主题是 `width: 100%` 加左侧
+菜单外边距的组合，同样的规则在那里会把右缘推出屏幕——于是类被摘掉，该
+主题保留自己的宽度。早期版本试过放大应用自身（CSS `100vw` 加负外边距，
+再按实测几何算位置），两个版本在真实路由器上都把布局挂出了屏幕边缘，
+这就是现在只改主题容器的一个属性并验证结果、而不是信任它的原因。
+
+### 目录大小
+
+目录自己没有大小——那一列里人们想要的数字是它整棵子树之和，而这需要把
+子树完整走一遍。自动填这列意味着每列一次目录就要为每个可见文件夹遍历
+一遍整个文件系统，而这台设备只有 32–128 MB 内存和缓慢的闪存。列 `/` 还会
+一路走进 `/proc` 和 `/sys`（它们的大小是虚构的，其中一些文件读取时会
+阻塞），以及每一块挂载的 USB 盘。
+
+所以它的行为与 Midnight Commander 一致：该列显示类型，直到你主动询问；
+**Ctrl+Space**（或右键菜单里的*计算大小*）为已标记的文件夹、或光标下的
+那个计算。结果替换列中的占位符，并保留到该面板重新加载。多个文件夹逐个
+而不是并行遍历，所以路由器上的 rpcd 永远不会同时跑几趟文件系统遍历。
+
+`dirsize` 后端方法有三条限制，全部刻意：
+
+- **`lstat`，绝不 `stat`**——符号链接按链接计数且从不解析，这排除了
+  符号链接环，也排除了在树中途逃出允许根的可能。
+- **不跨设备边界**，与 `du -x` 行为一致——这正是从 `/` 开始的遍历不会
+  走进 `/proc`、`/sys` 和挂载的 USB 盘的原因。查询挂载点本身的大小仍然
+  可以，因为那时遍历正是从该设备开始的。
+- **访问条目数与深度上限**（`dirsize_max_entries`、`dirsize_max_depth`）。
+  触到任一上限即停止遍历并置 `truncated`，列中数字前显示 `>`，提示里说
+  明该文件夹太大无法完整测量——把下界呈现为下界，而不是把部分之和呈现
+  为答案。
+
+不可读的子目录被跳过而不是让整个遍历失败，因为非 root 会话会遇到；计数
+通过 `unreadable` 返回。总和是名义大小，与文件列所显示的一致，也就是说
+硬链接每个链接计一次。
+
+还有一件值得记录的事，因为它不可见，且是拿已知大小的树跑遍历才抓到的：
+`fs.lstat()` 报告的设备是个**对象** `{ major, minor }`，不是数字。用 `!=`
+比较两个这种对象比的是对象同一性，永远为真，所以第一版把每个子目录都当
+成不同文件系统、从不深入，报告的只是顶层文件之和。`tests/dirsize-tests.sh`
+覆盖了它。
+
+### 列
+
+大小、修改时间和权限位在各自列内居中，表头与值一样，于是每列读起来像一
+个有标签的块，而不是挤在邻居旁边的文字。文件夹大小尚未计算时该列显示一
+个破折号——与 `fmtSize()` 对未知大小返回的相同：这列宁可什么也不说，也不
+放一个不是大小的东西。
+
+它们的宽度可拖拽。三列各自在表头行的左缘带一个手柄；拖动加宽或收窄该列，
+名称列吸收差值。手柄上双击恢复该列默认宽度。宽度以应用根上的 CSS 变量保存
+而不是写在单元格上，这意味着一次拖动同时移动*两块*面板的列且每行无需重渲染
+就跟上，并通过 `localStorage` 在访问间记住。
+
+这里有两件必须做对的事：`.fx-th` 不能用共享的 `all .2s` 过渡，否则表头单元
+格的 flex-basis 会做动画，比指针落后五分之一秒，而它下面的行却精确跟随；
+另外每次拖动都被钳制在每列的最小和最大之间，任何拖动都挤不掉名称列。
+
+### 打开：单击还是双击
+
+目录或文件默认**单击或单击触屏**打开。这是为手机选定的，双击在那里是个
+别扭又不可靠的手势，也因为打开本来就是文件列表的主要用途。开关在设置里
+「行为 → 单击打开」；取消勾选即恢复熟悉的桌面双击。
+
+既然普通单击已被占用，不打开而标记一行有两种方式：第一列的方框，以及行
+上的 **Ctrl+单击**。两种都与该设置的取值无关。
+
+一次点按常常其实是两次——手指会弹跳——而第二次单击落下时下面的列表已被
+替换，将要打开的是现在恰好坐在那个位置的东西。因此打开走 `claimOpen()`，
+每次手势只放行一次，依据两个信号：`ev.detail`（浏览器自己的点击计数——
+真正的双击里第二次点击携带 2；`dblclick` 事件同样携带 2，这就是只在 click
+上读它的原因）和距上次打开的短窗口，刻意比双击阈值短。被抑制的只有*打开*：
+光标照常移动，面板照常激活。同一机制顺带修了 `..` 行的一个旧毛病：双击
+曾一次上跳两级。由 `tests/ui-click-tests.sh` 覆盖。
+
+### 上传目录
+
+整个目录可以连同嵌套结构一起上传。两种方式，都在右键菜单里（手机上是长按）：
+
+- **上传目录**——普通的目录选择器。需要 `webkitdirectory`，所以在电脑上
+  可用。
+- **从 ZIP 上传目录**——选一个 `.zip`，**在浏览器里**解包。任何地方都可用，
+  手机也行。
+
+第二种正是为手机存在的：`webkitdirectory` 在**所有**移动浏览器上都没实现
+ ——Android 的 Chrome 没有，iOS 的 Safari 没有，Firefox 也没有。更糟的是，
+Android 版 Chrome 上这个属性本身*存在*，尽管目录根本选不了，所以检测属性是
+在撒谎。没有诚实的探测办法，于是把以触摸为主要输入的设备（`pointer: coarse`
+且无 `any-hover: hover`）当作不可用并给出 ZIP 路线。在手机上做压缩包是系统
+自带功能：iOS 的「文件」有「压缩」，多数 Android 文件管理器也有。
+
+整个过程完全发生在浏览器里，**不给路由器加任何东西**。浏览器交出一串扁平的
+文件列表，每个文件带着它在所选目录里的路径；视图把它变成目录列表和每个文件
+的目的地，然后：
+
+1. 通过同一个 `mkdir` ubus 方法逐个创建目录，最浅的优先（它每次调用只建
+   一层，所以顺序重要）；这里的 `EEXIST` 是普通情况，因为树的一部分可能
+   已经存在；
+2. 每个文件一次 POST 发到同一个上传端点，各自带自己的 `dest`。
+
+因此每条路径走的都是原有的门：ucode 里的 `canon()` 管 `mkdir`，Lua 里的
+`canon_path()` 管上传。没有新增攻击面，无论浏览器算出什么，上传都无法离开
+`allowed_root`。视图自己会丢掉 `..`、`.` 和空片段，但那是为了可预期性，
+不是替代检查——检查在路由器上，对每条路径生效。
+
+重名只问一次，且问题里带一个**「应用到其余」**勾选框：没有它，重新上传一个
+上百文件的目录就要问一百次。与「覆盖」一起勾选意味着「继续覆盖」，于是剩余
+文件带着已置位的标志发出——每文件一次请求而不是两次。
+
+**目录选择器**做不到的：空目录不会被带过去。经 `input[type=file]` 选出的目录
+只向浏览器报告文件，所以什么都没有的文件夹从不出现在列表里、也从不被创建。
+ZIP 路线没这个问题——压缩包对目录有自己的条目，空的也会被创建。
+
+#### 从 ZIP 里读什么
+
+压缩包解析在视图里，两百来行：文件尾、中央目录、本地头。条目数据在即将发送
+前按条目逐个读取（`File.slice()`），所以大压缩包从不需整个进内存。浏览器自己
+通过 `DecompressionStream('deflate-raw')` 解压——2023 年 5 月以来每个浏览器
+都有；不引入任何库。
+
+支持的是手机「压缩」按钮产出的东西：`stored` 和 `deflate` 条目。被拒绝而不是
+被弄坏的是：ZIP64、加密条目、以及任何其他压缩方法——这些条目被跳过，确认框
+会说明跳过了几个。名字在条目置位 flag 11 时按 UTF-8 解码，否则按 CP437——
+老版 Windows 就是这么写的。
+
+先弹确认：压缩包名、将创建多少文件和文件夹、到哪里、以及跳过多少条目。压缩
+包可以装几百个文件而目的地只是面板当前所在的目录，值得问一句。
+
+### 右键菜单
+
+右键是顶栏和键盘的完整替代品，不是子集。它带有 打开 / 查看 / 编辑 / 下载、
+复制 / 移动 / 重命名 / 删除、计算大小、选中 / 全选 / 清除选择、新建文件 /
+新建目录 / 上传、权限 / 属性、以及 搜索 / 刷新，每个条目都显示与顶栏相同的
+触发键。
+
+动作作用于哪些条目遵循与功能键相同的规则：显式选中优先，什么也没标记时才用
+被点击的那一行。右键点在选中集*之外*的行上，则只作用于该行。所以「标记三个、
+右键点其中一个、删除」指的是全部三个——而且菜单会明说，作用于多个条目的项
+都标着数量。
+
+菜单在行下方的空白处也能弹出，那里去掉按文件的条目，只留作用于目录的。
+
+菜单追加到 `<body>`，所以能逃出面板的 overflow 裁剪——这也意味着它渲染在
+`.fx-app` *之外*，原先解析不到任何 `--fx-*` 令牌：无边框、直角、分隔线不可见。
+令牌块为此声明在 `.fx-app, .fx-ctx` 上。
+
+### 在手机上
+
+900px 以下两块面板变成每次一块加切换器，顶栏也改形状而不是简单折行。它变成
+七列网格，把 13 个动作按钮恰好分成两整行 7+6。放任它自行折行会得到三行参差
+——412px 实测 5+6+2，360px 实测 4+5+4。标题占上面一行，选中计数占下面一行，
+两者都靠 `order` 而不是源顺序摆放：计数在标记里位于搜索和两个页面级按钮之间，
+留在那里的话一旦有选中就会把图标流挤成第三行。
+
+该宽度下 F 键标签被隐藏。手机没有 F 键，放下标签正是七个图标共享 360px 一行
+的前提。
+
+页面还收回了主题的 16px 侧向边距，降到 6px——360px 屏幕上的 32px 接近十分
+之一，文件列表比边距更需要宽度。这条规则也在 `#maincontent.fx-wide` 里，所以
+能摘掉该类的同一道守卫会把它一并摘掉。
+
+光削内边距还不够，因为主题可能让容器本身就比屏幕窄——一台手机上实测容器只有
+视口的 77%、左对齐，右侧空出一条带子。是哪个属性造成的各不相同（`max-width`、
+auto 外边距、百分比宽度），样式表无法预判，所以 `stretchContainer()` 不去识别
+它。900px 以下它测量容器；若空余不止一条小边距，就同时中和 `max-width`、
+`width` 和两个外边距，再测一次，除非结果既更宽又仍在屏幕内就把四个值都放回去。
+不适合它的布局因此保持自己的几何——与 `.fx-wide` 是同一份契约。桌面被直接
+排除——那里容器本来就*应该*比窗口窄，而 `.fx-wide` 已决定收回多少。
+
+`.fx-wide` 的 max-width 规则限定在 `min-width: 901px` 也是同一原因：低于它
+容器就该直接用满屏幕，我们的上限在那里掺和只会让测量多一个对手。
+
+LuCI 的基础视图会给页面追加 保存并应用 / 保存 / 重置 的页脚，除非三个处理器
+全被置空（`luci.js`：`if (this.handleSaveApply || this.handleSave ||
+this.handleReset)`）。这里三个都是 null。这不是洁癖：继承来的
+`handleSaveApply()` 会调 `ui.changes.apply()`，在一个没有任何表单的页面上，
+那个按钮会提交会话在别处暂存的任何 UCI 改动。
+
+值得知道的 Commander 惯例：
+
+- **光标和选中是两回事。** 光标是你用方向键移动的那条描边行；选中是你用
+  Insert/Space 或 `□` 框标记的集合。什么也没标记时，动作作用于光标下的行——
+  这让单文件操作很快。
+- 面板路径、排序、活动面板、隐藏文件可见性和「文件夹优先」都存进
+  `localStorage`。
+- 破坏性动作会列出它们将触碰的确切路径，并在其中出现核心系统路径
+  （`/etc`、`/overlay`、`/rom`、`/usr`、`/lib`、`/bin`、`/sbin`、`/boot`、
+  `/www`）时加更响亮的警告——这只是 UX 提示；真正的规则由后端执行，与界面
+  显示或隐藏什么无关。
+
+## 语言
+
+界面已完整翻译为**英文、俄文与简体中文**，使用 LuCI 标准的 gettext 流水线，
+因此跟随 LuCI 自身的语言设置：
+
+```sh
+uci set luci.main.lang=zh_cn
+uci commit luci
+```
+
+或 **系统 → 系统 → 语言**。`lang=auto` 时 LuCI 跟随浏览器的
+`Accept-Language`。
+
+编译后的 catalog 由 `luci-i18n-wrtcommander-<lang>` 子包安装到
+`/usr/lib/lua/luci/i18n/wrtcommander.<lang>.lmo`。注意它只翻译
+*Wrt Commander*；要让周围的 LuCI 界面也是中文，需要 LuCI 自己的 catalog
+（`luci-i18n-base-zh-cn`、`luci-i18n-base-ru`……）。
+
+**菜单项也走 catalog**，虽然在每种语言里都解析为「Wrt Commander」——产品名
+是名字不是描述，不翻译。菜单标题与其他字符串共用同一 catalog（上游应用把
+`menu.d/…json` 列为标题 msgid 的来源），所以这条字符串和其余的放在一起待在
+`po/` 里，`po/extract.py` 会自动从 `menu.d/luci-app-wrtcommander.json` 提取它。
+
+应用中的**每个**字符串都带 `msgctxt "wrtcommander"` 上下文。同一语言的所有
+`.lmo` catalog 在浏览器里共享一个扁平键空间，所以任何已安装包都可能劫持一个
+常用词：在真实路由器上，「Name」列标题曾显示为「Название」——不是来自
+luci-base（它的翻译与我们一致，都是「Имя」），而是来自某个恰好装着的其他包。
+给所有字符串加上下文把这一类 bug 整个封死，而不是发现一个堵一个：与
+luci-base 的共享键现在是 **0**，此前是 18。唯一的例外是产品名，因为它同时是
+菜单项标题，而 LuCI 翻译菜单标题不带上下文。
+
+源文件、工具和添加语言的说明在 [`po/README.md`](po/README.md)。俄文通过
+`N_()` 使用正确的三形式复数（`1 объект / 2 объекта / 5 объектов`）；简体中文
+使用单一复数形式（`nplurals=1`）。
+
+## 已知限制（第一阶段）
+
+- **路径校验逻辑有两份。** ucode 后端与 Lua 上传/下载控制器各自独立实现
+  `canon()`/`canon_path()`，因为 ubus/rpcd 与裸 HTTP CGI 是两个没有共享导入
+  路径的运行时。它们出自同一设计，且 `security-tests.sh`/`download-tests.sh`
+  对两边都有覆盖，但将来的策略变更（比如不同的 `allowed_root` 语义）必须
+  两处都改。
+- **不支持压缩包。** 解压/打包被刻意排除在本阶段范围外（见需求 §77），而不是
+  不安全地交付（Zip Slip 一类问题）；界面的「打开方式」目前限于预览/编辑/
+  下载，但右键菜单架构已经允许之后再加动作。
+- **下载不支持 HTTP Range**（大文件中断后无法续传）。
+- **并非每个对话框按钮都有请求进行中锁定**——多数破坏性动作已经过确认
+  模态框，那本是防误双击提交的主要防线，但仍有少数按钮在请求飞行中不
+  禁用自己。
+- **复制前不做剩余空间预检。** 预知副本能否放下需要对源做递归大小统计——
+  正是本应用为照顾慢闪存而在各处都避免的那类遍历。因此 `ENOSPC` 在发生时
+  以清楚的「设备空间不足」呈现，且写了一半的目标文件会被删除而不是留下。
+- **二进制检测是 NUL 字节启发式**（与 `git` 同类检查），不是完整的内容类型
+  嗅探。
+- **部分功能键同时也是浏览器快捷键。** 视图对它处理的键调用
+  `preventDefault()`，所以文件列表持有焦点时 F3/F5/F7 不会触发查找/刷新/
+  光标浏览——但每个 F 键动作同时是可点的按钮，不依赖浏览器配合。
+- **翻译在构建软件包时编译。** `.lmo` 是 `luci.mk` 经 `po2lmo` 从 `po/` 产出
+  的二进制格式；在这里改 `.po` 要等包重新构建才生效（见 `po/README.md`）。
+- 本次会话尚未在真实的 OpenWrt 25.12.x 硬件上验证——见上文**测试**与下文
+  **作为真正的 OpenWrt 包构建**。
+
+## 作为真正的 OpenWrt 包构建
+
+根目录的 `Makefile` 遵循 `luci.mk` 布局（`root/` → `/`、`htdocs/` → `/www`、
+`po/<lang>/` → `luci-i18n-wrtcommander-<lang>` 子包），所以本目录可以复制进
+`package/` 或某个 feed，用常规的 `make package/luci-app-wrtcommander/compile`
+构建。`/etc/config/wrtcommander` 声明在 `Package/conffiles` 中，
+`postinst`/`prerm` 会重载 `rpcd` 并清理 LuCI 索引缓存。

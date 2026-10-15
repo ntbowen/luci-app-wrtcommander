@@ -1,0 +1,1130 @@
+# Simplified Chinese translations for luci-app-wrtcommander.
+# This file is distributed under the same license as the
+# luci-app-wrtcommander package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: luci-app-wrtcommander 1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-15 00:00+0800\n"
+"PO-Revision-Date: 2026-10-15 00:00+0800\n"
+"Last-Translator: p0sixxx\n"
+"Language-Team: \n"
+"Language: zh_Hans\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "Wrt Commander"
+msgstr "Wrt Commander"
+
+msgctxt "wrtcommander"
+msgid "\"%s\" already exists at the destination."
+msgstr "“%s”在目标位置已存在。"
+
+msgctxt "wrtcommander"
+msgid "%d B"
+msgstr "%d B"
+
+msgctxt "wrtcommander"
+msgid "%s (%s)"
+msgstr "%s（%s）"
+
+msgctxt "wrtcommander"
+msgid "%s (broken)"
+msgstr "%s（已失效）"
+
+msgctxt "wrtcommander"
+msgid "%s GiB"
+msgstr "%s GiB"
+
+msgctxt "wrtcommander"
+msgid "%s KiB"
+msgstr "%s KiB"
+
+msgctxt "wrtcommander"
+msgid "%s MiB"
+msgstr "%s MiB"
+
+msgctxt "wrtcommander"
+msgid "%s free of %s"
+msgstr "可用 %s，共 %s"
+
+msgctxt "wrtcommander"
+msgid "Accessed"
+msgstr "访问时间"
+
+msgctxt "wrtcommander"
+msgid "Already exists"
+msgstr "已存在"
+
+msgctxt "wrtcommander"
+msgid "Already exists in destination"
+msgstr "目标位置中已存在"
+
+msgctxt "wrtcommander"
+msgid "Appearance"
+msgstr "外观"
+
+msgctxt "wrtcommander"
+msgid "Applies the next time a file is opened for editing."
+msgstr "在下次打开文件编辑时生效。"
+
+msgctxt "wrtcommander"
+msgid "Apply"
+msgstr "应用"
+
+msgctxt "wrtcommander"
+msgid "Apply to the rest"
+msgstr "应用到其余全部"
+
+msgctxt "wrtcommander"
+msgid "Archive"
+msgstr "压缩包"
+
+msgctxt "wrtcommander"
+msgid "At least %s: the folder is too large to measure in full."
+msgstr "至少 %s：文件夹太大，无法完整统计。"
+
+msgctxt "wrtcommander"
+msgid "Bad file descriptor"
+msgstr "错误的文件描述符"
+
+msgctxt "wrtcommander"
+msgid "Behaviour"
+msgstr "行为"
+
+msgctxt "wrtcommander"
+msgid "Binary"
+msgstr "二进制"
+
+msgctxt "wrtcommander"
+msgid "Broken symlink: %s"
+msgstr "失效的符号链接：%s"
+
+msgctxt "wrtcommander"
+msgid "Browse…"
+msgstr "浏览…"
+
+msgctxt "wrtcommander"
+msgid "Calculate folder size"
+msgstr "计算文件夹大小"
+
+msgctxt "wrtcommander"
+msgid "Calculate size"
+msgstr "计算大小"
+
+msgctxt "wrtcommander"
+msgid "Calculating…"
+msgstr "计算中…"
+
+msgctxt "wrtcommander"
+msgid "Cancel"
+msgstr "取消"
+
+msgctxt "wrtcommander"
+msgid "Cannot change owner"
+msgstr "无法更改所有者"
+
+msgctxt "wrtcommander"
+msgid "Cannot change permissions"
+msgstr "无法更改权限"
+
+msgctxt "wrtcommander"
+msgid "Cannot copy a directory into itself"
+msgstr "无法将目录复制到其自身内部"
+
+msgctxt "wrtcommander"
+msgid "Cannot copy special file"
+msgstr "无法复制特殊文件"
+
+msgctxt "wrtcommander"
+msgid "Cannot create destination file"
+msgstr "无法创建目标文件"
+
+msgctxt "wrtcommander"
+msgid "Cannot create directory"
+msgstr "无法创建目录"
+
+msgctxt "wrtcommander"
+msgid "Cannot create file"
+msgstr "无法创建文件"
+
+msgctxt "wrtcommander"
+msgid "Cannot create folder"
+msgstr "无法创建文件夹"
+
+msgctxt "wrtcommander"
+msgid "Cannot create symlink"
+msgstr "无法创建符号链接"
+
+msgctxt "wrtcommander"
+msgid "Cannot create temporary file"
+msgstr "无法创建临时文件"
+
+msgctxt "wrtcommander"
+msgid "Cannot download a directory"
+msgstr "无法下载目录"
+
+msgctxt "wrtcommander"
+msgid "Cannot move a directory into itself"
+msgstr "无法将目录移动到其自身内部"
+
+msgctxt "wrtcommander"
+msgid "Cannot open directory"
+msgstr "无法打开目录"
+
+msgctxt "wrtcommander"
+msgid "Cannot open file"
+msgstr "无法打开文件"
+
+msgctxt "wrtcommander"
+msgid "Cannot open source directory"
+msgstr "无法打开源目录"
+
+msgctxt "wrtcommander"
+msgid "Cannot open source file"
+msgstr "无法打开源文件"
+
+msgctxt "wrtcommander"
+msgid "Cannot read permissions"
+msgstr "无法读取权限"
+
+msgctxt "wrtcommander"
+msgid "Cannot read properties"
+msgstr "无法读取属性"
+
+msgctxt "wrtcommander"
+msgid "Cannot read symlink"
+msgstr "无法读取符号链接"
+
+msgctxt "wrtcommander"
+msgid "Cannot read the archive."
+msgstr "无法读取该压缩包。"
+
+msgctxt "wrtcommander"
+msgid "Cannot remove directory"
+msgstr "无法删除目录"
+
+msgctxt "wrtcommander"
+msgid "Cannot remove file"
+msgstr "无法删除文件"
+
+msgctxt "wrtcommander"
+msgid "Cannot rename"
+msgstr "无法重命名"
+
+msgctxt "wrtcommander"
+msgid "Cannot run df"
+msgstr "无法运行 df"
+
+msgctxt "wrtcommander"
+msgid "Cannot save file"
+msgstr "无法保存文件"
+
+msgctxt "wrtcommander"
+msgid "Cannot stat"
+msgstr "无法获取状态"
+
+msgctxt "wrtcommander"
+msgid "Cannot stat file"
+msgstr "无法获取文件状态"
+
+msgctxt "wrtcommander"
+msgid "Cannot stat path"
+msgstr "无法获取路径状态"
+
+msgctxt "wrtcommander"
+msgid "Cannot stat source"
+msgstr "无法获取源路径状态"
+
+msgctxt "wrtcommander"
+msgid "Cannot unpack \"%s\"."
+msgstr "无法解压“%s”。"
+
+msgctxt "wrtcommander"
+msgid "Changed"
+msgstr "更改时间"
+
+msgctxt "wrtcommander"
+msgid "Clear selection"
+msgstr "清除选择"
+
+msgctxt "wrtcommander"
+msgid "Click"
+msgstr "单击"
+
+msgctxt "wrtcommander"
+msgid "Close"
+msgstr "关闭"
+
+msgctxt "wrtcommander"
+msgid "Column widths"
+msgstr "列宽"
+
+msgctxt "wrtcommander"
+msgid "Confirm delete"
+msgstr "确认删除"
+
+msgctxt "wrtcommander"
+msgid "Content exceeds the editor size limit (%d bytes)"
+msgstr "内容超过编辑器大小限制（%d 字节）"
+
+msgctxt "wrtcommander"
+msgid "Copied"
+msgstr "已复制"
+
+msgctxt "wrtcommander"
+msgid "Copied but failed to remove source"
+msgstr "已复制但无法删除源文件"
+
+msgctxt "wrtcommander"
+msgid "Copy"
+msgstr "复制"
+
+msgctxt "wrtcommander"
+msgid "Copy \"%s\" to:"
+msgstr "将“%s”复制到："
+
+msgctxt "wrtcommander"
+msgid "Create"
+msgstr "创建"
+
+msgctxt "wrtcommander"
+msgid "Creating folders: %d of %d"
+msgstr "正在创建文件夹：%d / %d"
+
+msgctxt "wrtcommander"
+msgid "Ctrl+Space calculates the size of this folder"
+msgstr "Ctrl+空格 可计算此文件夹的大小"
+
+msgctxt "wrtcommander"
+msgid "Delete"
+msgstr "删除"
+
+msgctxt "wrtcommander"
+msgid "Delete \"%s\"?"
+msgstr "删除“%s”？"
+
+msgctxt "wrtcommander"
+msgid "Delete failed"
+msgstr "删除失败"
+
+msgctxt "wrtcommander"
+msgid "Delete folder \"%s\" and all of its contents?"
+msgstr "删除文件夹“%s”及其全部内容？"
+
+msgctxt "wrtcommander"
+msgid "Deleted"
+msgstr "已删除"
+
+msgctxt "wrtcommander"
+msgid "Destination is not a directory"
+msgstr "目标不是目录"
+
+msgctxt "wrtcommander"
+msgid "Destination: %s"
+msgstr "目标位置：%s"
+
+msgctxt "wrtcommander"
+msgid "Device"
+msgstr "设备"
+
+msgctxt "wrtcommander"
+msgid "Device or resource busy"
+msgstr "设备或资源忙"
+
+msgctxt "wrtcommander"
+msgid "Directory"
+msgstr "目录"
+
+msgctxt "wrtcommander"
+msgid "Directory not empty"
+msgstr "目录非空"
+
+msgctxt "wrtcommander"
+msgid "Discard"
+msgstr "丢弃"
+
+msgctxt "wrtcommander"
+msgid "Download"
+msgstr "下载"
+
+msgctxt "wrtcommander"
+msgid "Drag the edge of a column header to change it."
+msgstr "拖动列标题的边缘即可调整。"
+
+msgctxt "wrtcommander"
+msgid "Drag to resize, double-click to reset"
+msgstr "拖动调整宽度，双击重置"
+
+msgctxt "wrtcommander"
+msgid "Edit"
+msgstr "编辑"
+
+msgctxt "wrtcommander"
+msgid "Editor"
+msgstr "编辑器"
+
+msgctxt "wrtcommander"
+msgid "Empty query"
+msgstr "查询为空"
+
+msgctxt "wrtcommander"
+msgid "Execute"
+msgstr "执行"
+
+msgctxt "wrtcommander"
+msgid "FIFO"
+msgstr "FIFO"
+
+msgctxt "wrtcommander"
+msgid "Failed to resolve parent path"
+msgstr "无法解析父路径"
+
+msgctxt "wrtcommander"
+msgid "Failed to resolve path"
+msgstr "无法解析路径"
+
+msgctxt "wrtcommander"
+msgid "File %d of %d"
+msgstr "第 %d / %d 个文件"
+
+msgctxt "wrtcommander"
+msgid "File actions"
+msgstr "文件操作"
+
+msgctxt "wrtcommander"
+msgid "File already exists"
+msgstr "文件已存在"
+
+msgctxt "wrtcommander"
+msgid "File changed on disk"
+msgstr "文件已在磁盘上被修改"
+
+msgctxt "wrtcommander"
+msgid "File created"
+msgstr "文件已创建"
+
+msgctxt "wrtcommander"
+msgid "File exists"
+msgstr "文件已存在"
+
+msgctxt "wrtcommander"
+msgid "File has been modified externally"
+msgstr "文件已被外部修改"
+
+msgctxt "wrtcommander"
+msgid "File is too large for %s (%d bytes, limit %d bytes)"
+msgstr "文件太大，无法用于%s（%d 字节，上限 %d 字节）"
+
+msgctxt "wrtcommander"
+msgid "Files and folders whose name starts with a dot."
+msgstr "名称以点号开头的文件和文件夹。"
+
+msgctxt "wrtcommander"
+msgid "Files: %d, folders: %d"
+msgstr "文件：%d 个，文件夹：%d 个"
+
+msgctxt "wrtcommander"
+msgid "Filesystem"
+msgstr "文件系统"
+
+msgctxt "wrtcommander"
+msgid "First part"
+msgstr "开头部分"
+
+msgctxt "wrtcommander"
+msgid "Folder created"
+msgstr "文件夹已创建"
+
+msgctxt "wrtcommander"
+msgid "Folders first"
+msgstr "文件夹优先"
+
+msgctxt "wrtcommander"
+msgid "Go up one level"
+msgstr "返回上一级"
+
+msgctxt "wrtcommander"
+msgid "Group"
+msgstr "组"
+
+msgctxt "wrtcommander"
+msgid "Group ID"
+msgstr "组 ID"
+
+msgctxt "wrtcommander"
+msgid "Image"
+msgstr "图片"
+
+msgctxt "wrtcommander"
+msgid "Input/output error"
+msgstr "输入/输出错误"
+
+msgctxt "wrtcommander"
+msgid "Invalid cross-device link"
+msgstr "无效的跨设备链接"
+
+msgctxt "wrtcommander"
+msgid "Invalid data encoding"
+msgstr "无效的数据编码"
+
+msgctxt "wrtcommander"
+msgid "Invalid destination"
+msgstr "无效的目标位置"
+
+msgctxt "wrtcommander"
+msgid "Invalid filename"
+msgstr "无效的文件名"
+
+msgctxt "wrtcommander"
+msgid "Invalid mode"
+msgstr "无效的权限模式"
+
+msgctxt "wrtcommander"
+msgid "Invalid name"
+msgstr "无效的名称"
+
+msgctxt "wrtcommander"
+msgid "Invalid path"
+msgstr "无效的路径"
+
+msgctxt "wrtcommander"
+msgid "Invalid target path"
+msgstr "无效的目标路径"
+
+msgctxt "wrtcommander"
+msgid "Is a directory"
+msgstr "是目录"
+
+msgctxt "wrtcommander"
+msgid "Items already exist"
+msgstr "项目已存在"
+
+msgctxt "wrtcommander"
+msgid "Keep editing"
+msgstr "继续编辑"
+
+msgctxt "wrtcommander"
+msgid "Keyboard shortcuts"
+msgstr "键盘快捷键"
+
+msgctxt "wrtcommander"
+msgid "Last part"
+msgstr "结尾部分"
+
+msgctxt "wrtcommander"
+msgid "Left panel"
+msgstr "左面板"
+
+msgctxt "wrtcommander"
+msgid "Loading…"
+msgstr "加载中…"
+
+msgctxt "wrtcommander"
+msgid "Mode"
+msgstr "权限"
+
+msgctxt "wrtcommander"
+msgid "Modified"
+msgstr "修改时间"
+
+msgctxt "wrtcommander"
+msgid "Move"
+msgstr "移动"
+
+msgctxt "wrtcommander"
+msgid "Move \"%s\" to:"
+msgstr "将“%s”移动到："
+
+msgctxt "wrtcommander"
+msgid "Moved"
+msgstr "已移动"
+
+msgctxt "wrtcommander"
+msgid "Name"
+msgstr "名称"
+
+msgctxt "wrtcommander"
+msgid "Name cannot be empty"
+msgstr "名称不能为空"
+
+msgctxt "wrtcommander"
+msgid "Name cannot contain a slash"
+msgstr "名称不能包含斜杠"
+
+msgctxt "wrtcommander"
+msgid "Name is too long"
+msgstr "名称过长"
+
+msgctxt "wrtcommander"
+msgid "Name too long"
+msgstr "名称过长"
+
+msgctxt "wrtcommander"
+msgid "Navigation"
+msgstr "导航"
+
+msgctxt "wrtcommander"
+msgid "New file"
+msgstr "新建文件"
+
+msgctxt "wrtcommander"
+msgid "New folder"
+msgstr "新建文件夹"
+
+msgctxt "wrtcommander"
+msgid "No file received"
+msgstr "未收到文件"
+
+msgctxt "wrtcommander"
+msgid "No items given"
+msgstr "未指定项目"
+
+msgctxt "wrtcommander"
+msgid "No output from df"
+msgstr "df 无输出"
+
+msgctxt "wrtcommander"
+msgid "No paths given"
+msgstr "未指定路径"
+
+msgctxt "wrtcommander"
+msgid "No space left on device"
+msgstr "设备剩余空间不足"
+
+msgctxt "wrtcommander"
+msgid "No subdirectories"
+msgstr "无子目录"
+
+msgctxt "wrtcommander"
+msgid "No such file or directory"
+msgstr "没有该文件或目录"
+
+msgctxt "wrtcommander"
+msgid "No uid/gid given"
+msgstr "未指定 uid/gid"
+
+msgctxt "wrtcommander"
+msgid "Not a ZIP archive, or it is damaged."
+msgstr "不是 ZIP 压缩包，或已损坏。"
+
+msgctxt "wrtcommander"
+msgid "Not a directory"
+msgstr "不是目录"
+
+msgctxt "wrtcommander"
+msgid "Not a regular file"
+msgstr "不是普通文件"
+
+msgctxt "wrtcommander"
+msgid "Not a text file"
+msgstr "不是文本文件"
+
+msgctxt "wrtcommander"
+msgid "Not found"
+msgstr "未找到"
+
+msgctxt "wrtcommander"
+msgid "Nothing found"
+msgstr "未找到任何结果"
+
+msgctxt "wrtcommander"
+msgid "One click or tap opens a folder or a file. With this off it takes two, as on a desktop. Ctrl-click marks a row either way."
+msgstr "单击或轻触即可打开文件夹或文件。关闭后需双击，与桌面操作一致。无论是否开启，Ctrl+单击均可标记行。"
+
+msgctxt "wrtcommander"
+msgid "Open"
+msgstr "打开"
+
+msgctxt "wrtcommander"
+msgid "Open both panels where you left them last time."
+msgstr "在两个面板中打开上次离开时的位置。"
+
+msgctxt "wrtcommander"
+msgid "Open with a single click"
+msgstr "单击打开"
+
+msgctxt "wrtcommander"
+msgid "Operation failed"
+msgstr "操作失败"
+
+msgctxt "wrtcommander"
+msgid "Operation not permitted"
+msgstr "操作不被允许"
+
+msgctxt "wrtcommander"
+msgid "Operation not permitted on the root directory"
+msgstr "不允许对根目录执行此操作"
+
+msgctxt "wrtcommander"
+msgid "Others"
+msgstr "其他"
+
+msgctxt "wrtcommander"
+msgid "Overwrite"
+msgstr "覆盖"
+
+msgctxt "wrtcommander"
+msgid "Owner"
+msgstr "所有者"
+
+msgctxt "wrtcommander"
+msgid "Panels"
+msgstr "面板"
+
+msgctxt "wrtcommander"
+msgid "Parent directory does not exist"
+msgstr "父目录不存在"
+
+msgctxt "wrtcommander"
+msgid "Part of a file name"
+msgstr "文件名的一部分"
+
+msgctxt "wrtcommander"
+msgid "Path"
+msgstr "路径"
+
+msgctxt "wrtcommander"
+msgid "Path contains a NUL byte"
+msgstr "路径包含 NUL 字节"
+
+msgctxt "wrtcommander"
+msgid "Path escapes the allowed root via a symlink"
+msgstr "路径通过符号链接跳出了允许的根目录"
+
+msgctxt "wrtcommander"
+msgid "Path is empty"
+msgstr "路径为空"
+
+msgctxt "wrtcommander"
+msgid "Path is not a string"
+msgstr "路径不是字符串"
+
+msgctxt "wrtcommander"
+msgid "Path is outside the allowed root"
+msgstr "路径在允许的根目录之外"
+
+msgctxt "wrtcommander"
+msgid "Path must be absolute"
+msgstr "路径必须是绝对路径"
+
+msgctxt "wrtcommander"
+msgid "Permission denied"
+msgstr "权限被拒绝"
+
+msgctxt "wrtcommander"
+msgid "Permissions"
+msgstr "权限"
+
+msgctxt "wrtcommander"
+msgid "Permissions updated"
+msgstr "权限已更新"
+
+msgctxt "wrtcommander"
+msgid "Press Ctrl+S to save."
+msgstr "按 Ctrl+S 保存。"
+
+msgctxt "wrtcommander"
+msgid "Preview truncated, the file is %s."
+msgstr "预览已截断，文件大小为 %s。"
+
+msgctxt "wrtcommander"
+msgid "Properties"
+msgstr "属性"
+
+msgctxt "wrtcommander"
+msgid "Read"
+msgstr "读"
+
+msgctxt "wrtcommander"
+msgid "Read-only file system"
+msgstr "只读文件系统"
+
+msgctxt "wrtcommander"
+msgid "Reading %s…"
+msgstr "正在读取 %s…"
+
+msgctxt "wrtcommander"
+msgid "Refresh"
+msgstr "刷新"
+
+msgctxt "wrtcommander"
+msgid "Refresh the active panel"
+msgstr "刷新当前面板"
+
+msgctxt "wrtcommander"
+msgid "Refusing to download a non-regular file"
+msgstr "拒绝下载非常规文件"
+
+msgctxt "wrtcommander"
+msgid "Remember panel paths"
+msgstr "记住面板路径"
+
+msgctxt "wrtcommander"
+msgid "Rename"
+msgstr "重命名"
+
+msgctxt "wrtcommander"
+msgid "Renamed"
+msgstr "已重命名"
+
+msgctxt "wrtcommander"
+msgid "Request failed: %s"
+msgstr "请求失败：%s"
+
+msgctxt "wrtcommander"
+msgid "Reset"
+msgstr "重置"
+
+msgctxt "wrtcommander"
+msgid "Right panel"
+msgstr "右面板"
+
+msgctxt "wrtcommander"
+msgid "Root directory"
+msgstr "根目录"
+
+msgctxt "wrtcommander"
+msgid "Save"
+msgstr "保存"
+
+msgctxt "wrtcommander"
+msgid "Save in the editor"
+msgstr "在编辑器中保存"
+
+msgctxt "wrtcommander"
+msgid "Saved"
+msgstr "已保存"
+
+msgctxt "wrtcommander"
+msgid "Search"
+msgstr "搜索"
+
+msgctxt "wrtcommander"
+msgid "Search failed"
+msgstr "搜索失败"
+
+msgctxt "wrtcommander"
+msgid "Search inside subfolders"
+msgstr "在子文件夹中搜索"
+
+msgctxt "wrtcommander"
+msgid "Searching in: %s"
+msgstr "搜索位置：%s"
+
+msgctxt "wrtcommander"
+msgid "Searching…"
+msgstr "搜索中…"
+
+msgctxt "wrtcommander"
+msgid "Select"
+msgstr "选择"
+
+msgctxt "wrtcommander"
+msgid "Select a folder to calculate its size."
+msgstr "选择一个文件夹以计算其大小。"
+
+msgctxt "wrtcommander"
+msgid "Select all"
+msgstr "全选"
+
+msgctxt "wrtcommander"
+msgid "Select destination"
+msgstr "选择目标位置"
+
+msgctxt "wrtcommander"
+msgid "Select exactly one file to download."
+msgstr "请只选择一个文件下载。"
+
+msgctxt "wrtcommander"
+msgid "Select exactly one item to rename."
+msgstr "请只选择一个项目重命名。"
+
+msgctxt "wrtcommander"
+msgid "Select or unselect"
+msgstr "选中或取消选中"
+
+msgctxt "wrtcommander"
+msgid "Select or unselect without opening"
+msgstr "选中/取消选中而不打开"
+
+msgctxt "wrtcommander"
+msgid "Select this folder"
+msgstr "选择此文件夹"
+
+msgctxt "wrtcommander"
+msgid "Selection"
+msgstr "选择"
+
+msgctxt "wrtcommander"
+msgid "Settings"
+msgstr "设置"
+
+msgctxt "wrtcommander"
+msgid "Shortcuts work while the file list has focus, not while typing in a field."
+msgstr "快捷键在文件列表获得焦点时生效，在输入框中输入时不生效。"
+
+msgctxt "wrtcommander"
+msgid "Show hidden files"
+msgstr "显示隐藏文件"
+
+msgctxt "wrtcommander"
+msgid "Size"
+msgstr "大小"
+
+msgctxt "wrtcommander"
+msgid "Skip"
+msgstr "跳过"
+
+msgctxt "wrtcommander"
+msgid "Socket"
+msgstr "套接字"
+
+msgctxt "wrtcommander"
+msgid "Sort folders above files, whatever the sort column."
+msgstr "无论按哪一列排序，文件夹始终排在文件之前。"
+
+msgctxt "wrtcommander"
+msgid "Source and destination are the same"
+msgstr "源和目标相同"
+
+msgctxt "wrtcommander"
+msgid "Switch panel"
+msgstr "切换面板"
+
+msgctxt "wrtcommander"
+msgid "Symlink"
+msgstr "符号链接"
+
+msgctxt "wrtcommander"
+msgid "Symlink target"
+msgstr "链接目标"
+
+msgctxt "wrtcommander"
+msgid "Target already exists"
+msgstr "目标已存在"
+
+msgctxt "wrtcommander"
+msgid "Text"
+msgstr "文本"
+
+msgctxt "wrtcommander"
+msgid "The archive has nothing that can be uploaded."
+msgstr "压缩包中没有可上传的内容。"
+
+msgctxt "wrtcommander"
+msgid "The file is too large to edit. Download it instead."
+msgstr "文件太大无法编辑，请改为下载。"
+
+msgctxt "wrtcommander"
+msgid "The file is too large to show in full."
+msgstr "文件太大，无法完整显示。"
+
+msgctxt "wrtcommander"
+msgid "This action cannot be undone."
+msgstr "此操作无法撤销。"
+
+msgctxt "wrtcommander"
+msgid "This browser cannot pick a folder. Use \"Upload folder from a ZIP\" instead - that works everywhere, phones included."
+msgstr "此浏览器无法选择文件夹。请改用“从 ZIP 上传文件夹”——该方式在任何设备（包括手机）上都可用。"
+
+msgctxt "wrtcommander"
+msgid "This browser cannot unpack a compressed archive. Only a ZIP stored without compression can be used here."
+msgstr "此浏览器无法解压压缩归档，只能使用未压缩存储的 ZIP。"
+
+msgctxt "wrtcommander"
+msgid "This directory is empty"
+msgstr "此目录为空"
+
+msgctxt "wrtcommander"
+msgid "This does not look like a text file."
+msgstr "这看起来不是文本文件。"
+
+msgctxt "wrtcommander"
+msgid "This file was modified by something else after you opened it. Overwrite those changes?"
+msgstr "此文件在您打开后被其他程序修改。要覆盖那些更改吗？"
+
+msgctxt "wrtcommander"
+msgid "This is a binary file and cannot be shown as text."
+msgstr "这是二进制文件，无法以文本方式显示。"
+
+msgctxt "wrtcommander"
+msgid "Too many matches, only the first %d are shown."
+msgstr "匹配过多，仅显示前 %d 个。"
+
+msgctxt "wrtcommander"
+msgid "Too many open files"
+msgstr "打开的文件过多"
+
+msgctxt "wrtcommander"
+msgid "Type"
+msgstr "类型"
+
+msgctxt "wrtcommander"
+msgid "Type a path and press Enter"
+msgstr "输入路径并按回车"
+
+msgctxt "wrtcommander"
+msgid "Unexpected df output"
+msgstr "df 输出异常"
+
+msgctxt "wrtcommander"
+msgid "Unknown error"
+msgstr "未知错误"
+
+msgctxt "wrtcommander"
+msgid "Unsaved changes"
+msgstr "未保存的更改"
+
+msgctxt "wrtcommander"
+msgid "Unselect"
+msgstr "取消选中"
+
+msgctxt "wrtcommander"
+msgid "Up one level"
+msgstr "上一级"
+
+msgctxt "wrtcommander"
+msgid "Upload"
+msgstr "上传"
+
+msgctxt "wrtcommander"
+msgid "Upload failed"
+msgstr "上传失败"
+
+msgctxt "wrtcommander"
+msgid "Upload folder"
+msgstr "上传文件夹"
+
+msgctxt "wrtcommander"
+msgid "Upload folder from a ZIP"
+msgstr "从 ZIP 上传文件夹"
+
+msgctxt "wrtcommander"
+msgid "Uploaded %d of %d."
+msgstr "已上传 %d / %d。"
+
+msgctxt "wrtcommander"
+msgid "Uploading"
+msgstr "正在上传"
+
+msgctxt "wrtcommander"
+msgid "User ID"
+msgstr "用户 ID"
+
+msgctxt "wrtcommander"
+msgid "View"
+msgstr "查看"
+
+msgctxt "wrtcommander"
+msgid "WARNING: this includes a core system path. Deleting it can break the router."
+msgstr "警告：其中包含核心系统路径，删除可能导致路由器无法工作。"
+
+msgctxt "wrtcommander"
+msgid "Wrap long lines"
+msgstr "自动换行"
+
+msgctxt "wrtcommander"
+msgid "Write"
+msgstr "写"
+
+msgctxt "wrtcommander"
+msgid "Write failed (disk full or I/O error)"
+msgstr "写入失败（磁盘已满或 I/O 错误）"
+
+msgctxt "wrtcommander"
+msgid "Wrt Commander is disabled"
+msgstr "Wrt Commander 已禁用"
+
+msgctxt "wrtcommander"
+msgid "You have unsaved changes. Discard them?"
+msgstr "有未保存的更改。要丢弃吗？"
+
+msgctxt "wrtcommander"
+msgid "ZIP64 archives are not supported."
+msgstr "不支持 ZIP64 归档。"
+
+msgctxt "wrtcommander"
+msgid "failed"
+msgstr "失败"
+
+msgctxt "wrtcommander"
+msgid "up"
+msgstr "上级"
+
+msgctxt "wrtcommander"
+msgid "…and %d more"
+msgstr "…另外 %d 个"
+
+msgctxt "wrtcommander"
+msgid "%d file"
+msgid_plural "%d files"
+msgstr[0] "%d 个文件"
+
+msgctxt "wrtcommander"
+msgid "%d item"
+msgid_plural "%d items"
+msgstr[0] "%d 个项目"
+
+msgctxt "wrtcommander"
+msgid "%d item already exists at the destination. Overwrite it?"
+msgid_plural "%d items already exist at the destination. Overwrite them?"
+msgstr[0] "目标位置已有 %d 个项目存在。要覆盖吗？"
+
+msgctxt "wrtcommander"
+msgid "%d item selected"
+msgid_plural "%d items selected"
+msgstr[0] "已选中 %d 个项目"
+
+msgctxt "wrtcommander"
+msgid "%d selected"
+msgid_plural "%d selected"
+msgstr[0] "已选 %d 个"
+
+msgctxt "wrtcommander"
+msgid "Copy %d item to:"
+msgid_plural "Copy %d items to:"
+msgstr[0] "将 %d 个项目复制到："
+
+msgctxt "wrtcommander"
+msgid "Copy — %d item"
+msgid_plural "Copy — %d items"
+msgstr[0] "复制 — %d 个项目"
+
+msgctxt "wrtcommander"
+msgid "Delete %d selected item?"
+msgid_plural "Delete %d selected items?"
+msgstr[0] "删除选中的 %d 个项目？"
+
+msgctxt "wrtcommander"
+msgid "Delete — %d item"
+msgid_plural "Delete — %d items"
+msgstr[0] "删除 — %d 个项目"
+
+msgctxt "wrtcommander"
+msgid "Move %d item to:"
+msgid_plural "Move %d items to:"
+msgstr[0] "将 %d 个项目移动到："
+
+msgctxt "wrtcommander"
+msgid "Move — %d item"
+msgid_plural "Move — %d items"
+msgstr[0] "移动 — %d 个项目"
+
+msgctxt "wrtcommander"
+msgid "Skipped %d file with an unusable path."
+msgid_plural "Skipped %d files with unusable paths."
+msgstr[0] "已跳过 %d 个路径不可用的文件。"
+
+msgctxt "wrtcommander"
+msgid "Skipping %d entry that cannot be unpacked."
+msgid_plural "Skipping %d entries that cannot be unpacked."
+msgstr[0] "正在跳过 %d 个无法解压的条目。"
+
+msgctxt "wrtcommander"
+msgid "Uploaded %d file"
+msgid_plural "Uploaded %d files"
+msgstr[0] "已上传 %d 个文件"

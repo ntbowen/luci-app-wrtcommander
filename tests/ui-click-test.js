@@ -25,7 +25,7 @@ const CHROMIUM = process.env.CHROMIUM || undefined;
 const { chromium } = require(PLAYWRIGHT);
 
 const SRC = path.resolve(__dirname,
-  '../runtime/www/luci-static/resources/view/wrtcommander.js');
+  '../htdocs/luci-static/resources/view/wrtcommander.js');
 
 // a small archive built by python's zipfile - see the ZIP block below
 const ZIP_B64 =

@@ -1,6 +1,6 @@
 #!/bin/sh
 # Runs the full Wrt Commander on-router test suite in order.
-# Run this ON the router, as root, after install.sh.
+# Run this ON the router, as root, after the package is installed.
 #
 #   sh run-all.sh
 #   ROUTER_PASS=yourpass sh run-all.sh      # if HTTP tests need a real login password
@@ -27,9 +27,9 @@ run_stage() {
 
 echo "Wrt Commander - full on-router test suite"
 echo "Checking prerequisites..."
-command -v ubus >/dev/null 2>&1 || { echo "ERROR: ubus not found - run this on the router after install.sh" >&2; exit 1; }
+command -v ubus >/dev/null 2>&1 || { echo "ERROR: ubus not found - run this on the router" >&2; exit 1; }
 ubus list 2>/dev/null | grep -qx 'luci.wrtcommander' || {
-	echo "ERROR: luci.wrtcommander is not registered on ubus. Run install.sh (or deploy/restart.sh) first." >&2
+	echo "ERROR: luci.wrtcommander is not registered on ubus - install the package first." >&2
 	exit 1
 }
 

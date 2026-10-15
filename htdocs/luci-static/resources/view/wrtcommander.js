@@ -163,11 +163,135 @@ function iconFor(entry, cls) {
 	}
 }
 
+/* Every failure that reaches the UI from the ucode backend or the Lua
+   upload/download controller is a fixed English sentence, so it can be
+   translated here. Exact matches are looked up first, then the two
+   messages that carry runtime values, then "Context: detail" pairs in
+   which each half is itself a known message - "Cannot open directory:
+   Permission denied", or a filename after "File already exists:".
+   Anything unrecognised is shown unchanged, which is also the fallback
+   when a language has no translation for a message. Keep this table in
+   sync with the strings in root/usr/share/rpcd/ucode/wrtcommander.uc
+   and root/usr/lib/lua/luci/controller/wrtcommander.lua. */
+var BACKEND_MESSAGES = {
+	'Already exists': _('Already exists', 'wrtcommander'),
+	'Already exists in destination': _('Already exists in destination', 'wrtcommander'),
+	'Bad file descriptor': _('Bad file descriptor', 'wrtcommander'),
+	'Cannot change owner': _('Cannot change owner', 'wrtcommander'),
+	'Cannot change permissions': _('Cannot change permissions', 'wrtcommander'),
+	'Cannot copy a directory into itself': _('Cannot copy a directory into itself', 'wrtcommander'),
+	'Cannot copy special file': _('Cannot copy special file', 'wrtcommander'),
+	'Cannot create destination file': _('Cannot create destination file', 'wrtcommander'),
+	'Cannot create directory': _('Cannot create directory', 'wrtcommander'),
+	'Cannot create file': _('Cannot create file', 'wrtcommander'),
+	'Cannot create symlink': _('Cannot create symlink', 'wrtcommander'),
+	'Cannot create temporary file': _('Cannot create temporary file', 'wrtcommander'),
+	'Cannot download a directory': _('Cannot download a directory', 'wrtcommander'),
+	'Cannot move a directory into itself': _('Cannot move a directory into itself', 'wrtcommander'),
+	'Cannot open directory': _('Cannot open directory', 'wrtcommander'),
+	'Cannot open file': _('Cannot open file', 'wrtcommander'),
+	'Cannot open source directory': _('Cannot open source directory', 'wrtcommander'),
+	'Cannot open source file': _('Cannot open source file', 'wrtcommander'),
+	'Cannot read symlink': _('Cannot read symlink', 'wrtcommander'),
+	'Cannot remove directory': _('Cannot remove directory', 'wrtcommander'),
+	'Cannot remove file': _('Cannot remove file', 'wrtcommander'),
+	'Cannot rename': _('Cannot rename', 'wrtcommander'),
+	'Cannot run df': _('Cannot run df', 'wrtcommander'),
+	'Cannot save file': _('Cannot save file', 'wrtcommander'),
+	'Cannot stat': _('Cannot stat', 'wrtcommander'),
+	'Cannot stat file': _('Cannot stat file', 'wrtcommander'),
+	'Cannot stat path': _('Cannot stat path', 'wrtcommander'),
+	'Cannot stat source': _('Cannot stat source', 'wrtcommander'),
+	'Copied but failed to remove source': _('Copied but failed to remove source', 'wrtcommander'),
+	'Destination is not a directory': _('Destination is not a directory', 'wrtcommander'),
+	'Device or resource busy': _('Device or resource busy', 'wrtcommander'),
+	'Directory not empty': _('Directory not empty', 'wrtcommander'),
+	'Empty query': _('Empty query', 'wrtcommander'),
+	'Failed to resolve parent path': _('Failed to resolve parent path', 'wrtcommander'),
+	'Failed to resolve path': _('Failed to resolve path', 'wrtcommander'),
+	'File already exists': _('File already exists', 'wrtcommander'),
+	'File exists': _('File exists', 'wrtcommander'),
+	'File has been modified externally': _('File has been modified externally', 'wrtcommander'),
+	'Input/output error': _('Input/output error', 'wrtcommander'),
+	'Invalid cross-device link': _('Invalid cross-device link', 'wrtcommander'),
+	'Invalid data encoding': _('Invalid data encoding', 'wrtcommander'),
+	'Invalid destination': _('Invalid destination', 'wrtcommander'),
+	'Invalid filename': _('Invalid filename', 'wrtcommander'),
+	'Invalid mode': _('Invalid mode', 'wrtcommander'),
+	'Invalid name': _('Invalid name', 'wrtcommander'),
+	'Invalid path': _('Invalid path', 'wrtcommander'),
+	'Invalid target path': _('Invalid target path', 'wrtcommander'),
+	'Is a directory': _('Is a directory', 'wrtcommander'),
+	'Name too long': _('Name too long', 'wrtcommander'),
+	'No file received': _('No file received', 'wrtcommander'),
+	'No items given': _('No items given', 'wrtcommander'),
+	'No output from df': _('No output from df', 'wrtcommander'),
+	'No paths given': _('No paths given', 'wrtcommander'),
+	'No space left on device': _('No space left on device', 'wrtcommander'),
+	'No such file or directory': _('No such file or directory', 'wrtcommander'),
+	'No uid/gid given': _('No uid/gid given', 'wrtcommander'),
+	'Not a directory': _('Not a directory', 'wrtcommander'),
+	'Not a regular file': _('Not a regular file', 'wrtcommander'),
+	'Not a text file': _('Not a text file', 'wrtcommander'),
+	'Not found': _('Not found', 'wrtcommander'),
+	'Operation not permitted': _('Operation not permitted', 'wrtcommander'),
+	'Operation not permitted on the root directory': _('Operation not permitted on the root directory', 'wrtcommander'),
+	'Parent directory does not exist': _('Parent directory does not exist', 'wrtcommander'),
+	'Path contains a NUL byte': _('Path contains a NUL byte', 'wrtcommander'),
+	'Path escapes the allowed root via a symlink': _('Path escapes the allowed root via a symlink', 'wrtcommander'),
+	'Path is empty': _('Path is empty', 'wrtcommander'),
+	'Path is not a string': _('Path is not a string', 'wrtcommander'),
+	'Path is outside the allowed root': _('Path is outside the allowed root', 'wrtcommander'),
+	'Path must be absolute': _('Path must be absolute', 'wrtcommander'),
+	'Permission denied': _('Permission denied', 'wrtcommander'),
+	'Read-only file system': _('Read-only file system', 'wrtcommander'),
+	'Refusing to download a non-regular file': _('Refusing to download a non-regular file', 'wrtcommander'),
+	'Source and destination are the same': _('Source and destination are the same', 'wrtcommander'),
+	'Target already exists': _('Target already exists', 'wrtcommander'),
+	'Too many open files': _('Too many open files', 'wrtcommander'),
+	'Unexpected df output': _('Unexpected df output', 'wrtcommander'),
+	'Write failed (disk full or I/O error)': _('Write failed (disk full or I/O error)', 'wrtcommander'),
+	'Wrt Commander is disabled': _('Wrt Commander is disabled', 'wrtcommander')
+};
+
+var BACKEND_PATTERNS = [
+	[/^File is too large for (\S+) \((\d+) bytes, limit (\d+) bytes\)$/,
+		_('File is too large for %s (%d bytes, limit %d bytes)', 'wrtcommander')],
+	[/^Content exceeds the editor size limit \((\d+) bytes\)$/,
+		_('Content exceeds the editor size limit (%d bytes)', 'wrtcommander')]
+];
+
+function translateBackendMessage(msg) {
+	if (typeof msg !== 'string' || msg === '')
+		return msg;
+
+	if (BACKEND_MESSAGES[msg])
+		return BACKEND_MESSAGES[msg];
+
+	for (var i = 0; i < BACKEND_PATTERNS.length; i++) {
+		var m = msg.match(BACKEND_PATTERNS[i][0]);
+		if (m)
+			return String.prototype.format.apply(BACKEND_PATTERNS[i][1], m.slice(1));
+	}
+
+	var idx = msg.indexOf(': ');
+	if (idx > 0) {
+		var head = msg.substring(0, idx);
+		var tail = msg.substring(idx + 2);
+		var h = BACKEND_MESSAGES[head];
+		var t = translateBackendMessage(tail);
+		if (h || t !== tail)
+			return (h || head) + ': ' + t;
+	}
+
+	return msg;
+}
+
 function errorMessage(reply, fallback) {
 	if (!reply)
 		return fallback || _('Unknown error', 'wrtcommander');
 	if (reply.error && reply.error.message)
-		return reply.error.message;
+		return translateBackendMessage(reply.error.message);
 	return fallback || _('Unknown error', 'wrtcommander');
 }
 
@@ -707,7 +831,7 @@ return view.extend({
 	   as the same icon twice - so these two are drawn instead. Inline
 	   markup, no icon library, and the strokes take the button's own
 	   colour so both themes are handled without a second palette. */
-	trayIcon: function (dir) {
+	strokeIcon: function (paths, arrowFrom) {
 		var NS = 'http://www.w3.org/2000/svg';
 		var svg = document.createElementNS(NS, 'svg');
 
@@ -716,27 +840,41 @@ return view.extend({
 		svg.setAttribute('aria-hidden', 'true');
 		svg.setAttribute('focusable', 'false');
 
-		var up = (dir === 'up');
-		var paths = [
-			/* the tray, identical for both */
-			'M4.75 15.25v2.25a2.5 2.5 0 0 0 2.5 2.5h9.5a2.5 2.5 0 0 0 2.5-2.5v-2.25',
-			/* shaft */
-			up ? 'M12 15.5V4.25' : 'M12 4.25V15.5',
-			/* head */
-			up ? 'M7.75 8.5 12 4.25l4.25 4.25' : 'M7.75 11.25 12 15.5l4.25-4.25'
-		];
-
 		for (var i = 0; i < paths.length; i++) {
 			var el = document.createElementNS(NS, 'path');
 			el.setAttribute('d', paths[i]);
-			/* the arrow is the part that carries the meaning, so it is the
-			   part that gets the accent colour */
-			if (i > 0)
+			if (i >= arrowFrom)
 				el.setAttribute('class', 'fx-act-svg-arrow');
 			svg.appendChild(el);
 		}
 
 		return svg;
+	},
+
+	trayIcon: function (dir) {
+		var up = (dir === 'up');
+
+		return this.strokeIcon([
+			/* the tray, identical for both */
+			'M4.75 15.25v2.25a2.5 2.5 0 0 0 2.5 2.5h9.5a2.5 2.5 0 0 0 2.5-2.5v-2.25',
+			/* the arrow is the part that carries the meaning, so it is the
+			   part that gets the accent colour */
+			up ? 'M12 15.5V4.25' : 'M12 4.25V15.5',
+			up ? 'M7.75 8.5 12 4.25l4.25 4.25' : 'M7.75 11.25 12 15.5l4.25-4.25'
+		], 1);
+	},
+
+	/* Drawn rather than U+2328: the bare glyph renders in the text font
+	   and comes out far smaller than the emoji around it, while the
+	   emoji-variant selector makes it a washed-out picture that vanishes
+	   on dark themes. Strokes match the upload/download pair exactly. */
+	keyIcon: function () {
+		return this.strokeIcon([
+			'M2 6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2Z',
+			'M6 8.5h.01M10 8.5h.01M14 8.5h.01M18 8.5h.01',
+			'M6 12h.01M10 12h.01M14 12h.01M18 12h.01',
+			'M7.5 16h9'
+		]);
 	},
 
 	renderHeader: function () {
@@ -755,7 +893,7 @@ return view.extend({
 		function act(icon, key, label, fn, cls) {
 			return E('button', {
 				class: 'btn cbi-button fx-act' + (cls ? ' ' + cls : ''),
-				title: key ? (label + ' (' + key + ')') : label,
+				title: key ? _('%s (%s)', 'wrtcommander').format(label, key) : label,
 				'aria-label': label,
 				click: ui.createHandlerFn(self, function () { fn(); })
 			}, [
@@ -791,10 +929,7 @@ return view.extend({
 			E('span', { class: 'fx-fn-spacer' }),
 			n ? E('span', { class: 'fx-fn-count' },
 				N_(n, '%d selected', '%d selected', 'wrtcommander').format(n)) : '',
-			/* U+2328 without the emoji variation selector: with it the
-			   keyboard renders washed-out and nearly invisible on a dark
-			   theme, without it as a crisp glyph */
-			act('\u2328', '', _('Keyboard shortcuts', 'wrtcommander'), function () { self.actShortcuts(); }),
+			act(self.keyIcon(), '', _('Keyboard shortcuts', 'wrtcommander'), function () { self.actShortcuts(); }),
 			act('\u2699\ufe0f', '', _('Settings', 'wrtcommander'), function () { self.actSettings(); })
 		]);
 	},
@@ -1492,14 +1627,16 @@ return view.extend({
 		}
 
 		if (targets.length) {
-			var label = many ? N_(targets.length, '%d item', '%d items', 'wrtcommander').format(targets.length) : '';
-			items.push([_('Copy', 'wrtcommander') + (label ? ' \u2014 ' + label : ''), 'F5',
+			items.push([many ? N_(targets.length, 'Copy — %d item', 'Copy — %d items', 'wrtcommander').format(targets.length)
+				: _('Copy', 'wrtcommander'), 'F5',
 				function () { self.copyOrMove('copy', id, targets); }]);
-			items.push([_('Move', 'wrtcommander') + (label ? ' \u2014 ' + label : ''), 'F6',
+			items.push([many ? N_(targets.length, 'Move — %d item', 'Move — %d items', 'wrtcommander').format(targets.length)
+				: _('Move', 'wrtcommander'), 'F6',
 				function () { self.copyOrMove('move', id, targets); }]);
 			if (one)
 				items.push([_('Rename', 'wrtcommander'), 'F2', function () { self.renameEntry(id, one); }]);
-			items.push([_('Delete', 'wrtcommander') + (label ? ' \u2014 ' + label : ''), 'F8',
+			items.push([many ? N_(targets.length, 'Delete — %d item', 'Delete — %d items', 'wrtcommander').format(targets.length)
+				: _('Delete', 'wrtcommander'), 'F8',
 				function () { self.deleteEntries(id, targets); }, 'fx-ctx-danger']);
 			items.push(SEP);
 		}
@@ -1927,7 +2064,7 @@ return view.extend({
 			];
 			if (st.is_symlink)
 				rows.splice(3, 0, [_('Symlink target', 'wrtcommander'),
-					st.symlink_target + (st.broken ? ' (' + _('broken', 'wrtcommander') + ')' : '')]);
+					st.broken ? _('%s (broken)', 'wrtcommander').format(st.symlink_target) : st.symlink_target]);
 
 			ui.showModal(_('Properties', 'wrtcommander'), [
 				E('table', { class: 'table fx-props' }, rows.map(function (r) {

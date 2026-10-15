@@ -6,24 +6,26 @@ pipeline, so it translates the same way any other `luci-app-*` does.
 ```
 po/templates/wrtcommander.pot   source strings, regenerated from the sources
 po/ru/wrtcommander.po           Russian translation
+po/zh_Hans/wrtcommander.po      Simplified Chinese translation
 po/extract.py                  extracts strings into the .pot
 po/verify-lmo.py               independently verifies a compiled .lmo
 ```
 
 Strings come from two places: `_()` / `N_()` calls in the JS view, and
 the `title` of the LuCI menu entry in
-`runtime/usr/share/luci/menu.d/luci-app-wrtcommander.json`. The menu
+`root/usr/share/luci/menu.d/luci-app-wrtcommander.json`. The menu
 title goes through this same catalog at runtime. It resolves to the
 product name unchanged - Wrt Commander is a name, not a description, so it
 reads the same in every language - but it still has to be *in* the
 catalog, because a msgid with no entry would leave the menu untranslated
 rather than deliberately unchanged.
 
-The compiled catalog is committed at
-`runtime/usr/lib/lua/luci/i18n/wrtcommander.ru.lmo` and installed to
-`/usr/lib/lua/luci/i18n/wrtcommander.ru.lmo`. It is committed on purpose:
-this stage of the project is deployed by copying files onto a router,
-which has neither a compiler nor the LuCI build host tools.
+No compiled catalogs are committed: `luci.mk` compiles `po/<lang>/*.po`
+into `luci-i18n-wrtcommander-<lang>` subpackages during the package
+build, and each of those installs its catalog to
+`/usr/lib/lua/luci/i18n/wrtcommander.<lang>.lmo` on the router. For local
+verification a `.lmo` can still be built by hand - see "Verifying a
+compiled catalog" below.
 
 ## How LuCI actually resolves a string
 
@@ -93,7 +95,7 @@ curl -sO https://raw.githubusercontent.com/openwrt/luci/master/modules/luci-base
 
 ## Adding or updating strings
 
-1. Edit `runtime/www/luci-static/resources/view/wrtcommander.js`, wrapping
+1. Edit `htdocs/luci-static/resources/view/wrtcommander.js`, wrapping
    user-visible text in `_('…')`, or `N_(n, '…', '…')` when a count is
    involved.
 2. Regenerate the template:
@@ -103,19 +105,14 @@ curl -sO https://raw.githubusercontent.com/openwrt/luci/master/modules/luci-base
    ```
 
 3. Add the new msgids to `po/ru/wrtcommander.po` (and any other language).
-4. Rebuild the catalog — see below.
-5. Verify it:
+4. Rebuild the package: `luci.mk` recompiles the catalogs on its own.
+   To check a catalog locally first, see below.
 
-   ```sh
-   python3 po/verify-lmo.py po/ru/wrtcommander.po \
-       runtime/usr/lib/lua/luci/i18n/wrtcommander.ru.lmo
-   ```
-
-## Rebuilding the .lmo
+## Verifying a compiled catalog
 
 `.lmo` is LuCI's own binary catalog format, produced by `po2lmo` from
-`luci-base`. It is not part of a normal Linux distribution, so build it
-from the LuCI sources once:
+`luci-base`. The package build runs it automatically; to check a catalog
+by hand, build `po2lmo` from the LuCI sources once:
 
 ```sh
 git clone --depth 1 https://github.com/openwrt/luci
@@ -124,10 +121,12 @@ make po2lmo          # or, if that pulls in too much:
                      # gcc -O2 -o po2lmo po2lmo.c lib/lmo.c
 ```
 
-Then, from the repository root:
+(it is also already in `<buildroot>/staging_dir/hostpkg/bin` of any
+configured OpenWrt tree), then, from the repository root:
 
 ```sh
-po2lmo po/ru/wrtcommander.po runtime/usr/lib/lua/luci/i18n/wrtcommander.ru.lmo
+po2lmo po/ru/wrtcommander.po /tmp/wrtcommander.ru.lmo
+python3 po/verify-lmo.py po/ru/wrtcommander.po /tmp/wrtcommander.ru.lmo
 ```
 
 `lib/lmo.c` also contains a bison-generated plural-form evaluator that
@@ -153,12 +152,17 @@ implementations, which is what guarantees the browser will find them.
 ```sh
 mkdir -p po/<lang>
 cp po/templates/wrtcommander.pot po/<lang>/wrtcommander.po
-# translate, set a correct Plural-Forms header for that language, then:
-po2lmo po/<lang>/wrtcommander.po \
-    runtime/usr/lib/lua/luci/i18n/wrtcommander.<lang>.lmo
-python3 po/verify-lmo.py po/<lang>/wrtcommander.po \
-    runtime/usr/lib/lua/luci/i18n/wrtcommander.<lang>.lmo
+# translate, set a correct Plural-Forms header for that language
 ```
 
-Then add the new `.lmo` to `deploy/MANIFEST` so `install.sh` picks it up
-and `uninstall.sh` removes it again.
+Nothing else to wire up: `luci.mk` discovers `po/<lang>` directories and
+emits a `luci-i18n-wrtcommander-<lang>` subpackage for each, provided the
+language is enabled under "LuCI -> Translations" in the image
+configuration. To sanity-check the catalog without a full build, compile
+it with `po2lmo` and run `po/verify-lmo.py` as shown above.
+
+Note: the `po/` subdirectory is the gettext-style name (`zh_Hans`,
+`pt_BR`, ...), but the installed `.lmo` filename uses LuCI's runtime LC
+alias (`zh-cn`, `pt-br`, ... - the `LUCI_LC_ALIAS.*` table in
+`luci.mk`). That is why the Chinese catalog lives in `po/zh_Hans/` but
+installs as `/usr/lib/lua/luci/i18n/wrtcommander.zh-cn.lmo`.

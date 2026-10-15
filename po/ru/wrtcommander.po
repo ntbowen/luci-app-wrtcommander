@@ -1,10 +1,20 @@
 msgid ""
 msgstr ""
+"Project-Id-Version: luci-app-wrtcommander\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-15 00:00+0800\n"
+"PO-Revision-Date: 2026-10-15 00:00+0800\n"
+"Last-Translator: p0sixxx\n"
+"Language-Team: \n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Project-Id-Version: luci-app-wrtcommander\n"
-"Language: ru\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+msgid "Wrt Commander"
+msgstr "Wrt Commander"
 
 msgctxt "wrtcommander"
 msgid "\"%s\" already exists at the destination."
@@ -13,6 +23,17 @@ msgstr "«%s» уже существует в папке назначения."
 msgctxt "wrtcommander"
 msgid "%d B"
 msgstr "%d Б"
+
+msgctxt "wrtcommander"
+msgid "%s (%s)"
+msgstr ""
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "broken"
+msgctxt "wrtcommander"
+msgid "%s (broken)"
+msgstr "битая"
 
 msgctxt "wrtcommander"
 msgid "%s GiB"
@@ -34,13 +55,47 @@ msgctxt "wrtcommander"
 msgid "Accessed"
 msgstr "Последний доступ"
 
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "File already exists"
+msgctxt "wrtcommander"
+msgid "Already exists"
+msgstr "Файл уже существует"
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "\"%s\" already exists at the destination."
+msgctxt "wrtcommander"
+msgid "Already exists in destination"
+msgstr "«%s» уже существует в папке назначения."
+
+msgctxt "wrtcommander"
+msgid "Appearance"
+msgstr "Внешний вид"
+
+msgctxt "wrtcommander"
+msgid "Applies the next time a file is opened for editing."
+msgstr "Применится при следующем открытии файла на правку."
+
 msgctxt "wrtcommander"
 msgid "Apply"
 msgstr "Применить"
 
 msgctxt "wrtcommander"
+msgid "Apply to the rest"
+msgstr "Применить к остальным"
+
+msgctxt "wrtcommander"
 msgid "Archive"
 msgstr "Архив"
+
+msgctxt "wrtcommander"
+msgid "At least %s: the folder is too large to measure in full."
+msgstr "Не менее %s: папка слишком велика, чтобы измерить её целиком."
+
+msgctxt "wrtcommander"
+msgid "Bad file descriptor"
+msgstr ""
 
 msgctxt "wrtcommander"
 msgid "Behaviour"
@@ -59,12 +114,59 @@ msgid "Browse…"
 msgstr "Обзор…"
 
 msgctxt "wrtcommander"
+msgid "Calculate folder size"
+msgstr "Посчитать размер папки"
+
+msgctxt "wrtcommander"
+msgid "Calculate size"
+msgstr "Посчитать размер"
+
+msgctxt "wrtcommander"
+msgid "Calculating…"
+msgstr "Идёт подсчёт…"
+
+msgctxt "wrtcommander"
 msgid "Cancel"
 msgstr "Отмена"
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Cannot change permissions"
+msgctxt "wrtcommander"
+msgid "Cannot change owner"
+msgstr "Не удалось изменить права"
 
 msgctxt "wrtcommander"
 msgid "Cannot change permissions"
 msgstr "Не удалось изменить права"
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Cannot open directory"
+msgctxt "wrtcommander"
+msgid "Cannot copy a directory into itself"
+msgstr "Не удалось открыть каталог"
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Cannot open file"
+msgctxt "wrtcommander"
+msgid "Cannot copy special file"
+msgstr "Не удалось открыть файл"
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Cannot create file"
+msgctxt "wrtcommander"
+msgid "Cannot create destination file"
+msgstr "Не удалось создать файл"
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Cannot open directory"
+msgctxt "wrtcommander"
+msgid "Cannot create directory"
+msgstr "Не удалось открыть каталог"
 
 msgctxt "wrtcommander"
 msgid "Cannot create file"
@@ -74,6 +176,34 @@ msgctxt "wrtcommander"
 msgid "Cannot create folder"
 msgstr "Не удалось создать папку"
 
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Cannot create file"
+msgctxt "wrtcommander"
+msgid "Cannot create symlink"
+msgstr "Не удалось создать файл"
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Cannot create file"
+msgctxt "wrtcommander"
+msgid "Cannot create temporary file"
+msgstr "Не удалось создать файл"
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Cannot open directory"
+msgctxt "wrtcommander"
+msgid "Cannot download a directory"
+msgstr "Не удалось открыть каталог"
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Cannot open directory"
+msgctxt "wrtcommander"
+msgid "Cannot move a directory into itself"
+msgstr "Не удалось открыть каталог"
+
 msgctxt "wrtcommander"
 msgid "Cannot open directory"
 msgstr "Не удалось открыть каталог"
@@ -82,37 +212,104 @@ msgctxt "wrtcommander"
 msgid "Cannot open file"
 msgstr "Не удалось открыть файл"
 
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Cannot open directory"
+msgctxt "wrtcommander"
+msgid "Cannot open source directory"
+msgstr "Не удалось открыть каталог"
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Cannot open file"
+msgctxt "wrtcommander"
+msgid "Cannot open source file"
+msgstr "Не удалось открыть файл"
+
 msgctxt "wrtcommander"
 msgid "Cannot read permissions"
+msgstr "Не удалось прочитать права"
+
+msgctxt "wrtcommander"
+msgid "Cannot read properties"
+msgstr "Не удалось прочитать свойства"
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Cannot read permissions"
+msgctxt "wrtcommander"
+msgid "Cannot read symlink"
 msgstr "Не удалось прочитать права"
 
 msgctxt "wrtcommander"
 msgid "Cannot read the archive."
 msgstr "Не удалось прочитать архив."
 
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Cannot open directory"
 msgctxt "wrtcommander"
-msgid "Cannot read properties"
-msgstr "Не удалось прочитать свойства"
+msgid "Cannot remove directory"
+msgstr "Не удалось открыть каталог"
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Cannot create file"
+msgctxt "wrtcommander"
+msgid "Cannot remove file"
+msgstr "Не удалось создать файл"
 
 msgctxt "wrtcommander"
 msgid "Cannot rename"
 msgstr "Не удалось переименовать"
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Cannot rename"
+msgctxt "wrtcommander"
+msgid "Cannot run df"
+msgstr "Не удалось переименовать"
+
+msgctxt "wrtcommander"
+msgid "Cannot save file"
+msgstr "Не удалось сохранить файл"
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Cannot save file"
+msgctxt "wrtcommander"
+msgid "Cannot stat"
+msgstr "Не удалось сохранить файл"
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Cannot save file"
+msgctxt "wrtcommander"
+msgid "Cannot stat file"
+msgstr "Не удалось сохранить файл"
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Cannot save file"
+msgctxt "wrtcommander"
+msgid "Cannot stat path"
+msgstr "Не удалось сохранить файл"
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Cannot save file"
+msgctxt "wrtcommander"
+msgid "Cannot stat source"
+msgstr "Не удалось сохранить файл"
 
 msgctxt "wrtcommander"
 msgid "Cannot unpack \"%s\"."
 msgstr "Не удалось распаковать «%s»."
 
 msgctxt "wrtcommander"
-msgid "Cannot save file"
-msgstr "Не удалось сохранить файл"
-
-msgctxt "wrtcommander"
 msgid "Changed"
 msgstr "Изменение метаданных"
 
-#. Needs its own context: luci-base also ships "Clear selection", with a
-#. different Russian wording, and all .lmo catalogues for a language share
-#. one flat key space in the browser.
 msgctxt "wrtcommander"
 msgid "Clear selection"
 msgstr "Снять отметки"
@@ -126,12 +323,24 @@ msgid "Close"
 msgstr "Закрыть"
 
 msgctxt "wrtcommander"
+msgid "Column widths"
+msgstr "Ширина столбцов"
+
+msgctxt "wrtcommander"
 msgid "Confirm delete"
 msgstr "Подтверждение удаления"
 
 msgctxt "wrtcommander"
+msgid "Content exceeds the editor size limit (%d bytes)"
+msgstr ""
+
+msgctxt "wrtcommander"
 msgid "Copied"
 msgstr "Скопировано"
+
+msgctxt "wrtcommander"
+msgid "Copied but failed to remove source"
+msgstr ""
 
 msgctxt "wrtcommander"
 msgid "Copy"
@@ -148,6 +357,10 @@ msgstr "Создать"
 msgctxt "wrtcommander"
 msgid "Creating folders: %d of %d"
 msgstr "Создание папок: %d из %d"
+
+msgctxt "wrtcommander"
+msgid "Ctrl+Space calculates the size of this folder"
+msgstr "Ctrl+Space — посчитать размер этой папки"
 
 msgctxt "wrtcommander"
 msgid "Delete"
@@ -169,6 +382,13 @@ msgctxt "wrtcommander"
 msgid "Deleted"
 msgstr "Удалено"
 
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Cannot open directory"
+msgctxt "wrtcommander"
+msgid "Destination is not a directory"
+msgstr "Не удалось открыть каталог"
+
 msgctxt "wrtcommander"
 msgid "Destination: %s"
 msgstr "Куда: %s"
@@ -178,8 +398,19 @@ msgid "Device"
 msgstr "Устройство"
 
 msgctxt "wrtcommander"
+msgid "Device or resource busy"
+msgstr ""
+
+msgctxt "wrtcommander"
 msgid "Directory"
 msgstr "Каталог"
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "This directory is empty"
+msgctxt "wrtcommander"
+msgid "Directory not empty"
+msgstr "Каталог пуст"
 
 msgctxt "wrtcommander"
 msgid "Discard"
@@ -189,7 +420,10 @@ msgctxt "wrtcommander"
 msgid "Download"
 msgstr "Скачать"
 
-#. Tooltip on the drag handle between two column headers.
+msgctxt "wrtcommander"
+msgid "Drag the edge of a column header to change it."
+msgstr "Потяните за край заголовка столбца, чтобы изменить её."
+
 msgctxt "wrtcommander"
 msgid "Drag to resize, double-click to reset"
 msgstr "Потяните, чтобы изменить ширину; двойной клик — сброс"
@@ -197,6 +431,14 @@ msgstr "Потяните, чтобы изменить ширину; двойно
 msgctxt "wrtcommander"
 msgid "Edit"
 msgstr "Правка"
+
+msgctxt "wrtcommander"
+msgid "Editor"
+msgstr "Редактор"
+
+msgctxt "wrtcommander"
+msgid "Empty query"
+msgstr ""
 
 msgctxt "wrtcommander"
 msgid "Execute"
@@ -207,16 +449,20 @@ msgid "FIFO"
 msgstr "Канал FIFO"
 
 msgctxt "wrtcommander"
+msgid "Failed to resolve parent path"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Failed to resolve path"
+msgstr ""
+
+msgctxt "wrtcommander"
 msgid "File %d of %d"
 msgstr "Файл %d из %d"
 
-#. Menu entry title, and the heading of the page itself. Deliberately
-#. left as the product name: Wrt Commander is a name, not a description,
-#. so it stays the same in every language. msgstr repeats msgid on
-#. purpose rather than being left empty, to record that this is a
-#. decision and not a string somebody forgot to translate.
-msgid "Wrt Commander"
-msgstr "Wrt Commander"
+msgctxt "wrtcommander"
+msgid "File actions"
+msgstr "Действия с файлами"
 
 msgctxt "wrtcommander"
 msgid "File already exists"
@@ -229,6 +475,25 @@ msgstr "Файл изменился на диске"
 msgctxt "wrtcommander"
 msgid "File created"
 msgstr "Файл создан"
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "File already exists"
+msgctxt "wrtcommander"
+msgid "File exists"
+msgstr "Файл уже существует"
+
+msgctxt "wrtcommander"
+msgid "File has been modified externally"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "File is too large for %s (%d bytes, limit %d bytes)"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Files and folders whose name starts with a dot."
+msgstr "Файлы и папки, имя которых начинается с точки."
 
 msgctxt "wrtcommander"
 msgid "Files: %d, folders: %d"
@@ -251,6 +516,10 @@ msgid "Folders first"
 msgstr "Папки в начале"
 
 msgctxt "wrtcommander"
+msgid "Go up one level"
+msgstr "На уровень выше"
+
+msgctxt "wrtcommander"
 msgid "Group"
 msgstr "Группа"
 
@@ -263,8 +532,65 @@ msgid "Image"
 msgstr "Изображение"
 
 msgctxt "wrtcommander"
+msgid "Input/output error"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Invalid cross-device link"
+msgstr ""
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Invalid name"
+msgctxt "wrtcommander"
+msgid "Invalid data encoding"
+msgstr "Недопустимое имя"
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Select destination"
+msgctxt "wrtcommander"
+msgid "Invalid destination"
+msgstr "Выбор папки назначения"
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Invalid name"
+msgctxt "wrtcommander"
+msgid "Invalid filename"
+msgstr "Недопустимое имя"
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Invalid name"
+msgctxt "wrtcommander"
+msgid "Invalid mode"
+msgstr "Недопустимое имя"
+
+msgctxt "wrtcommander"
 msgid "Invalid name"
 msgstr "Недопустимое имя"
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Invalid name"
+msgctxt "wrtcommander"
+msgid "Invalid path"
+msgstr "Недопустимое имя"
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Invalid name"
+msgctxt "wrtcommander"
+msgid "Invalid target path"
+msgstr "Недопустимое имя"
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Root directory"
+msgctxt "wrtcommander"
+msgid "Is a directory"
+msgstr "Корневой каталог"
 
 msgctxt "wrtcommander"
 msgid "Items already exist"
@@ -290,8 +616,6 @@ msgctxt "wrtcommander"
 msgid "Loading…"
 msgstr "Загрузка…"
 
-#. Column header for the mode string (-rw-r--r--). Deliberately short:
-#. the full "Права доступа" does not fit a half-width panel column.
 msgctxt "wrtcommander"
 msgid "Mode"
 msgstr "Права"
@@ -328,6 +652,17 @@ msgctxt "wrtcommander"
 msgid "Name is too long"
 msgstr "Имя слишком длинное"
 
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Name is too long"
+msgctxt "wrtcommander"
+msgid "Name too long"
+msgstr "Имя слишком длинное"
+
+msgctxt "wrtcommander"
+msgid "Navigation"
+msgstr "Навигация"
+
 msgctxt "wrtcommander"
 msgid "New file"
 msgstr "Новый файл"
@@ -337,24 +672,91 @@ msgid "New folder"
 msgstr "Новая папка"
 
 msgctxt "wrtcommander"
+msgid "No file received"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "No items given"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "No output from df"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "No paths given"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "No space left on device"
+msgstr ""
+
+msgctxt "wrtcommander"
 msgid "No subdirectories"
 msgstr "Вложенных папок нет"
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "No subdirectories"
+msgctxt "wrtcommander"
+msgid "No such file or directory"
+msgstr "Вложенных папок нет"
+
+msgctxt "wrtcommander"
+msgid "No uid/gid given"
+msgstr ""
 
 msgctxt "wrtcommander"
 msgid "Not a ZIP archive, or it is damaged."
 msgstr "Это не ZIP-архив или он повреждён."
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Root directory"
+msgctxt "wrtcommander"
+msgid "Not a directory"
+msgstr "Корневой каталог"
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Cannot create file"
+msgctxt "wrtcommander"
+msgid "Not a regular file"
+msgstr "Не удалось создать файл"
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Cannot create file"
+msgctxt "wrtcommander"
+msgid "Not a text file"
+msgstr "Не удалось создать файл"
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Nothing found"
+msgctxt "wrtcommander"
+msgid "Not found"
+msgstr "Ничего не найдено"
 
 msgctxt "wrtcommander"
 msgid "Nothing found"
 msgstr "Ничего не найдено"
 
 msgctxt "wrtcommander"
-msgid "One click or tap opens a folder or a file. With this off it takes two, as on a desktop. Ctrl-click marks a row either way."
-msgstr "Один щелчок или касание открывает папку или файл. Если выключено — нужны два, как на компьютере. Ctrl+щелчок отмечает строку в любом случае."
+msgid ""
+"One click or tap opens a folder or a file. With this off it takes two, as on "
+"a desktop. Ctrl-click marks a row either way."
+msgstr ""
+"Один щелчок или касание открывает папку или файл. Если выключено — нужны "
+"два, как на компьютере. Ctrl+щелчок отмечает строку в любом случае."
 
 msgctxt "wrtcommander"
 msgid "Open"
 msgstr "Открыть"
+
+msgctxt "wrtcommander"
+msgid "Open both panels where you left them last time."
+msgstr "Открывать обе панели там, где вы их оставили."
 
 msgctxt "wrtcommander"
 msgid "Open with a single click"
@@ -363,6 +765,17 @@ msgstr "Открывать одним щелчком"
 msgctxt "wrtcommander"
 msgid "Operation failed"
 msgstr "Операция не выполнена"
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Operation failed"
+msgctxt "wrtcommander"
+msgid "Operation not permitted"
+msgstr "Операция не выполнена"
+
+msgctxt "wrtcommander"
+msgid "Operation not permitted on the root directory"
+msgstr ""
 
 msgctxt "wrtcommander"
 msgid "Others"
@@ -377,12 +790,51 @@ msgid "Owner"
 msgstr "Владелец"
 
 msgctxt "wrtcommander"
+msgid "Panels"
+msgstr "Панели"
+
+msgctxt "wrtcommander"
+msgid "Parent directory does not exist"
+msgstr ""
+
+msgctxt "wrtcommander"
 msgid "Part of a file name"
 msgstr "Часть имени файла"
 
 msgctxt "wrtcommander"
 msgid "Path"
 msgstr "Путь"
+
+msgctxt "wrtcommander"
+msgid "Path contains a NUL byte"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Path escapes the allowed root via a symlink"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Path is empty"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Path is not a string"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Path is outside the allowed root"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Path must be absolute"
+msgstr ""
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Permissions updated"
+msgctxt "wrtcommander"
+msgid "Permission denied"
+msgstr "Права обновлены"
 
 msgctxt "wrtcommander"
 msgid "Permissions"
@@ -409,12 +861,28 @@ msgid "Read"
 msgstr "Чтение"
 
 msgctxt "wrtcommander"
+msgid "Read-only file system"
+msgstr ""
+
+msgctxt "wrtcommander"
 msgid "Reading %s…"
 msgstr "Чтение %s…"
 
 msgctxt "wrtcommander"
 msgid "Refresh"
 msgstr "Обновить"
+
+msgctxt "wrtcommander"
+msgid "Refresh the active panel"
+msgstr "Обновить активную панель"
+
+msgctxt "wrtcommander"
+msgid "Refusing to download a non-regular file"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Remember panel paths"
+msgstr "Запоминать пути панелей"
 
 msgctxt "wrtcommander"
 msgid "Rename"
@@ -429,6 +897,10 @@ msgid "Request failed: %s"
 msgstr "Сбой запроса: %s"
 
 msgctxt "wrtcommander"
+msgid "Reset"
+msgstr "Сбросить"
+
+msgctxt "wrtcommander"
 msgid "Right panel"
 msgstr "Правая панель"
 
@@ -439,6 +911,10 @@ msgstr "Корневой каталог"
 msgctxt "wrtcommander"
 msgid "Save"
 msgstr "Сохранить"
+
+msgctxt "wrtcommander"
+msgid "Save in the editor"
+msgstr "Сохранить в редакторе"
 
 msgctxt "wrtcommander"
 msgid "Saved"
@@ -469,6 +945,14 @@ msgid "Select"
 msgstr "Отметить"
 
 msgctxt "wrtcommander"
+msgid "Select a folder to calculate its size."
+msgstr "Выберите папку, чтобы посчитать её размер."
+
+msgctxt "wrtcommander"
+msgid "Select all"
+msgstr "Отметить всё"
+
+msgctxt "wrtcommander"
 msgid "Select destination"
 msgstr "Выбор папки назначения"
 
@@ -481,6 +965,10 @@ msgid "Select exactly one item to rename."
 msgstr "Для переименования выберите ровно один объект."
 
 msgctxt "wrtcommander"
+msgid "Select or unselect"
+msgstr "Отметить или снять отметку"
+
+msgctxt "wrtcommander"
 msgid "Select or unselect without opening"
 msgstr "Отметить или снять отметку, не открывая"
 
@@ -489,8 +977,18 @@ msgid "Select this folder"
 msgstr "Выбрать эту папку"
 
 msgctxt "wrtcommander"
+msgid "Selection"
+msgstr "Выделение"
+
+msgctxt "wrtcommander"
 msgid "Settings"
 msgstr "Настройки"
+
+msgctxt "wrtcommander"
+msgid ""
+"Shortcuts work while the file list has focus, not while typing in a field."
+msgstr ""
+"Горячие клавиши работают, когда фокус на списке файлов, а не в поле ввода."
 
 msgctxt "wrtcommander"
 msgid "Show hidden files"
@@ -501,24 +999,47 @@ msgid "Size"
 msgstr "Размер"
 
 msgctxt "wrtcommander"
+msgid "Skip"
+msgstr "Пропустить"
+
+msgctxt "wrtcommander"
 msgid "Socket"
 msgstr "Сокет"
+
+msgctxt "wrtcommander"
+msgid "Sort folders above files, whatever the sort column."
+msgstr "Папки всегда выше файлов, независимо от столбца сортировки."
+
+msgctxt "wrtcommander"
+msgid "Source and destination are the same"
+msgstr ""
+
+msgctxt "wrtcommander"
+msgid "Switch panel"
+msgstr "Переключить панель"
 
 msgctxt "wrtcommander"
 msgid "Symlink"
 msgstr "Символьная ссылка"
 
 msgctxt "wrtcommander"
-msgid "Skip"
-msgstr "Пропустить"
-
-msgctxt "wrtcommander"
 msgid "Symlink target"
 msgstr "Цель ссылки"
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "File already exists"
+msgctxt "wrtcommander"
+msgid "Target already exists"
+msgstr "Файл уже существует"
 
 msgctxt "wrtcommander"
 msgid "Text"
 msgstr "Текст"
+
+msgctxt "wrtcommander"
+msgid "The archive has nothing that can be uploaded."
+msgstr "В архиве нет ничего, что можно загрузить."
 
 msgctxt "wrtcommander"
 msgid "The file is too large to edit. Download it instead."
@@ -533,16 +1054,20 @@ msgid "This action cannot be undone."
 msgstr "Это действие нельзя отменить."
 
 msgctxt "wrtcommander"
-msgid "The archive has nothing that can be uploaded."
-msgstr "В архиве нет ничего, что можно загрузить."
+msgid ""
+"This browser cannot pick a folder. Use \"Upload folder from a ZIP\" instead "
+"- that works everywhere, phones included."
+msgstr ""
+"Этот браузер не умеет выбирать папку. Возьмите «Загрузить папку из ZIP» — "
+"это работает везде, включая телефоны."
 
 msgctxt "wrtcommander"
-msgid "This browser cannot pick a folder. Use \"Upload folder from a ZIP\" instead - that works everywhere, phones included."
-msgstr "Этот браузер не умеет выбирать папку. Возьмите «Загрузить папку из ZIP» — это работает везде, включая телефоны."
-
-msgctxt "wrtcommander"
-msgid "This browser cannot unpack a compressed archive. Only a ZIP stored without compression can be used here."
-msgstr "Этот браузер не умеет распаковывать сжатые архивы. Здесь подойдёт только ZIP, сохранённый без сжатия."
+msgid ""
+"This browser cannot unpack a compressed archive. Only a ZIP stored without "
+"compression can be used here."
+msgstr ""
+"Этот браузер не умеет распаковывать сжатые архивы. Здесь подойдёт только "
+"ZIP, сохранённый без сжатия."
 
 msgctxt "wrtcommander"
 msgid "This directory is empty"
@@ -553,7 +1078,9 @@ msgid "This does not look like a text file."
 msgstr "Это не похоже на текстовый файл."
 
 msgctxt "wrtcommander"
-msgid "This file was modified by something else after you opened it. Overwrite those changes?"
+msgid ""
+"This file was modified by something else after you opened it. Overwrite "
+"those changes?"
 msgstr "После открытия файл изменил кто-то ещё. Перезаписать эти изменения?"
 
 msgctxt "wrtcommander"
@@ -564,6 +1091,13 @@ msgctxt "wrtcommander"
 msgid "Too many matches, only the first %d are shown."
 msgstr "Слишком много совпадений, показаны только первые %d."
 
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Cannot open file"
+msgctxt "wrtcommander"
+msgid "Too many open files"
+msgstr "Не удалось открыть файл"
+
 msgctxt "wrtcommander"
 msgid "Type"
 msgstr "Тип"
@@ -573,6 +1107,10 @@ msgid "Type a path and press Enter"
 msgstr "Введите путь и нажмите Enter"
 
 msgctxt "wrtcommander"
+msgid "Unexpected df output"
+msgstr ""
+
+msgctxt "wrtcommander"
 msgid "Unknown error"
 msgstr "Неизвестная ошибка"
 
@@ -580,8 +1118,6 @@ msgctxt "wrtcommander"
 msgid "Unsaved changes"
 msgstr "Несохранённые изменения"
 
-#. Context-menu item shown in place of "Select" when the row is already
-#. marked.
 msgctxt "wrtcommander"
 msgid "Unselect"
 msgstr "Снять отметку"
@@ -623,24 +1159,37 @@ msgid "View"
 msgstr "Просмотр"
 
 msgctxt "wrtcommander"
-msgid "WARNING: this includes a core system path. Deleting it can break the router."
-msgstr "ВНИМАНИЕ: среди выбранного есть системный путь. Его удаление может нарушить работу роутера."
+msgid ""
+"WARNING: this includes a core system path. Deleting it can break the router."
+msgstr ""
+"ВНИМАНИЕ: среди выбранного есть системный путь. Его удаление может нарушить "
+"работу роутера."
+
+msgctxt "wrtcommander"
+msgid "Wrap long lines"
+msgstr "Переносить длинные строки"
 
 msgctxt "wrtcommander"
 msgid "Write"
 msgstr "Запись"
 
 msgctxt "wrtcommander"
-msgid "ZIP64 archives are not supported."
-msgstr "Архивы ZIP64 не поддерживаются."
+msgid "Write failed (disk full or I/O error)"
+msgstr ""
+
+#, fuzzy
+#| msgid "Wrt Commander"
+msgctxt "wrtcommander"
+msgid "Wrt Commander is disabled"
+msgstr "Wrt Commander"
 
 msgctxt "wrtcommander"
 msgid "You have unsaved changes. Discard them?"
 msgstr "Есть несохранённые изменения. Отбросить их?"
 
 msgctxt "wrtcommander"
-msgid "broken"
-msgstr "битая"
+msgid "ZIP64 archives are not supported."
+msgstr "Архивы ZIP64 не поддерживаются."
 
 msgctxt "wrtcommander"
 msgid "failed"
@@ -655,94 +1204,11 @@ msgid "…and %d more"
 msgstr "…и ещё %d"
 
 msgctxt "wrtcommander"
-msgid "Appearance"
-msgstr "Внешний вид"
-
-msgctxt "wrtcommander"
-msgid "Applies the next time a file is opened for editing."
-msgstr "Применится при следующем открытии файла на правку."
-
-msgctxt "wrtcommander"
-msgid "Column widths"
-msgstr "Ширина столбцов"
-
-msgctxt "wrtcommander"
-msgid "Drag the edge of a column header to change it."
-msgstr "Потяните за край заголовка столбца, чтобы изменить её."
-
-msgctxt "wrtcommander"
-msgid "Editor"
-msgstr "Редактор"
-
-msgctxt "wrtcommander"
-msgid "File actions"
-msgstr "Действия с файлами"
-
-msgctxt "wrtcommander"
-msgid "Files and folders whose name starts with a dot."
-msgstr "Файлы и папки, имя которых начинается с точки."
-
-msgctxt "wrtcommander"
-msgid "Navigation"
-msgstr "Навигация"
-
-msgctxt "wrtcommander"
-msgid "Open both panels where you left them last time."
-msgstr "Открывать обе панели там, где вы их оставили."
-
-msgctxt "wrtcommander"
-msgid "Panels"
-msgstr "Панели"
-
-msgctxt "wrtcommander"
-msgid "Remember panel paths"
-msgstr "Запоминать пути панелей"
-
-#. Own context: luci-base also ships "Reset", worded differently, and all
-#. .lmo catalogues for a language share one flat key space in the browser.
-msgctxt "wrtcommander"
-msgid "Reset"
-msgstr "Сбросить"
-
-msgctxt "wrtcommander"
-msgid "Selection"
-msgstr "Выделение"
-
-msgctxt "wrtcommander"
-msgid "Sort folders above files, whatever the sort column."
-msgstr "Папки всегда выше файлов, независимо от столбца сортировки."
-
-msgctxt "wrtcommander"
-msgid "Wrap long lines"
-msgstr "Переносить длинные строки"
-
-msgctxt "wrtcommander"
-msgid "Apply to the rest"
-msgstr "Применить к остальным"
-
-msgctxt "wrtcommander"
-msgid "At least %s: the folder is too large to measure in full."
-msgstr "Не менее %s: папка слишком велика, чтобы измерить её целиком."
-
-msgctxt "wrtcommander"
-msgid "Calculate folder size"
-msgstr "Посчитать размер папки"
-
-msgctxt "wrtcommander"
-msgid "Calculate size"
-msgstr "Посчитать размер"
-
-msgctxt "wrtcommander"
-msgid "Calculating…"
-msgstr "Идёт подсчёт…"
-
-msgctxt "wrtcommander"
-msgid "Ctrl+Space calculates the size of this folder"
-msgstr "Ctrl+Space — посчитать размер этой папки"
-
-msgctxt "wrtcommander"
-msgid "Select a folder to calculate its size."
-msgstr "Выберите папку, чтобы посчитать её размер."
+msgid "%d file"
+msgid_plural "%d files"
+msgstr[0] "%d файл"
+msgstr[1] "%d файла"
+msgstr[2] "%d файлов"
 
 msgctxt "wrtcommander"
 msgid "%d item"
@@ -779,9 +1245,31 @@ msgstr[0] "Копировать %d объект в:"
 msgstr[1] "Копировать %d объекта в:"
 msgstr[2] "Копировать %d объектов в:"
 
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Copy %d item to:"
+#| msgid_plural "Copy %d items to:"
+msgctxt "wrtcommander"
+msgid "Copy — %d item"
+msgid_plural "Copy — %d items"
+msgstr[0] "Копировать %d объект в:"
+msgstr[1] "Копировать %d объекта в:"
+msgstr[2] "Копировать %d объектов в:"
+
 msgctxt "wrtcommander"
 msgid "Delete %d selected item?"
 msgid_plural "Delete %d selected items?"
+msgstr[0] "Удалить %d отмеченный объект?"
+msgstr[1] "Удалить %d отмеченных объекта?"
+msgstr[2] "Удалить %d отмеченных объектов?"
+
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Delete %d selected item?"
+#| msgid_plural "Delete %d selected items?"
+msgctxt "wrtcommander"
+msgid "Delete — %d item"
+msgid_plural "Delete — %d items"
 msgstr[0] "Удалить %d отмеченный объект?"
 msgstr[1] "Удалить %d отмеченных объекта?"
 msgstr[2] "Удалить %d отмеченных объектов?"
@@ -793,12 +1281,16 @@ msgstr[0] "Переместить %d объект в:"
 msgstr[1] "Переместить %d объекта в:"
 msgstr[2] "Переместить %d объектов в:"
 
+#, fuzzy
+#| msgctxt "wrtcommander"
+#| msgid "Move %d item to:"
+#| msgid_plural "Move %d items to:"
 msgctxt "wrtcommander"
-msgid "Skipping %d entry that cannot be unpacked."
-msgid_plural "Skipping %d entries that cannot be unpacked."
-msgstr[0] "Пропущена %d запись, которую не удаётся распаковать."
-msgstr[1] "Пропущено %d записи, которые не удаётся распаковать."
-msgstr[2] "Пропущено %d записей, которые не удаётся распаковать."
+msgid "Move — %d item"
+msgid_plural "Move — %d items"
+msgstr[0] "Переместить %d объект в:"
+msgstr[1] "Переместить %d объекта в:"
+msgstr[2] "Переместить %d объектов в:"
 
 msgctxt "wrtcommander"
 msgid "Skipped %d file with an unusable path."
@@ -808,43 +1300,15 @@ msgstr[1] "Пропущено %d файла с неподходящими пут
 msgstr[2] "Пропущено %d файлов с неподходящими путями."
 
 msgctxt "wrtcommander"
+msgid "Skipping %d entry that cannot be unpacked."
+msgid_plural "Skipping %d entries that cannot be unpacked."
+msgstr[0] "Пропущена %d запись, которую не удаётся распаковать."
+msgstr[1] "Пропущено %d записи, которые не удаётся распаковать."
+msgstr[2] "Пропущено %d записей, которые не удаётся распаковать."
+
+msgctxt "wrtcommander"
 msgid "Uploaded %d file"
 msgid_plural "Uploaded %d files"
 msgstr[0] "Загружен %d файл"
 msgstr[1] "Загружено %d файла"
 msgstr[2] "Загружено %d файлов"
-
-msgctxt "wrtcommander"
-msgid "%d file"
-msgid_plural "%d files"
-msgstr[0] "%d файл"
-msgstr[1] "%d файла"
-msgstr[2] "%d файлов"
-
-msgctxt "wrtcommander"
-msgid "Go up one level"
-msgstr "На уровень выше"
-
-msgctxt "wrtcommander"
-msgid "Refresh the active panel"
-msgstr "Обновить активную панель"
-
-msgctxt "wrtcommander"
-msgid "Save in the editor"
-msgstr "Сохранить в редакторе"
-
-msgctxt "wrtcommander"
-msgid "Select all"
-msgstr "Отметить всё"
-
-msgctxt "wrtcommander"
-msgid "Select or unselect"
-msgstr "Отметить или снять отметку"
-
-msgctxt "wrtcommander"
-msgid "Shortcuts work while the file list has focus, not while typing in a field."
-msgstr "Горячие клавиши работают, когда фокус на списке файлов, а не в поле ввода."
-
-msgctxt "wrtcommander"
-msgid "Switch panel"
-msgstr "Переключить панель"

@@ -5,7 +5,7 @@
 
 cd "$(dirname "$0")" || exit 1
 
-LUA="$(command -v lua5.1 || command -v lua || true)"
+LUA="$(command -v lua5.1 || command -v luajit || command -v lua || true)"
 if [ -z "$LUA" ]; then
 	echo "SKIP: no lua interpreter found"
 	exit 0
